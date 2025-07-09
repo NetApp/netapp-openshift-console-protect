@@ -21,7 +21,7 @@ const SusanooObjectCreate = () => {
     return (
         <>
             <ListPageHeader 
-                title="Create NetApp Trident Object"
+                title="Create NetApp Protect Object"
             />
             <Page>
                 <ResourceYAMLEditor 

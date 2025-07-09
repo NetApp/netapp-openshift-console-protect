@@ -13,18 +13,18 @@
   {
     "type": "console.flag/model",
     "properties": {
-      "flag": "NETAPP_IOS",
+      "flag": "NETAPP_CONSOLE_PROTECT",
       "model": {
         "group": "netapp.com",
         "version": "v1",
-        "kind": "Susanoo"
+        "kind": "netapp-openshift-console-trident"
       }
     }
   },
   {
     "type": "console.navigation/section",
     "properties": {
-      "id": "admin-susanoo-section",
+      "id": "admin-protect-section",
       "perspective": "admin",
       "name": "NetApp Protection Console",
       "insertBefore": "builds"
@@ -43,11 +43,11 @@
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-susanoo-protection",
+      "id": "admin-protect-protection",
       "name": "Protection",
       "href": "/susanoo-protection",
       "perspective": "admin",
-      "section": "admin-susanoo-section"
+      "section": "admin-protect-section"
     }
   },
   {
@@ -63,11 +63,11 @@
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-susanoo-backend",
+      "id": "admin-protect-backend",
       "name": "Setup",
       "href": "/susanoo-backend",
       "perspective": "admin",
-      "section": "admin-susanoo-section"
+      "section": "admin-protect-section"
     }
   },      
   {
