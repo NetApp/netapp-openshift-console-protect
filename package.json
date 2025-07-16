@@ -1,12 +1,12 @@
 {
   "name": "netapp-openshift-console-protect",
-  "version": "25.6.25",
-  "description": "netapp-openshift-console-protect",
+  "version": "25.7.16",
+  "description": "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
   "private": true,
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NetApp/susanoo.git"
+    "url": "https://github.com/NetApp/netapp-openshift-console-protect.git"
   },
   "scripts": {
     "clean": "rm -rf dist",
@@ -101,15 +101,15 @@
   },
   "consolePlugin": {
     "name": "netapp-openshift-console-protect",
-    "version": "25.6.25",
+    "version": "25.7.16",
     "displayName": "NetApp Console for Trident Protect",
     "description": "NetApp Console Plug-in for Red Hat OpenShift provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
     "exposedModules": {
-      "SusanooProtection": "./components/protection/SusanooProtection",
-      "SusanooProtectionDetails": "./components/protection/SusanooProtectionDetails",
-      "SusanooBackendSetup": "./components/backend/SusanooBackendSetup",
-      "SusanooProtectApplicationDetails": "./components/protect/SusanooProtectApplicationDetails",
-      "SusanooObjectCreate": "./components/SusanooObjectCreate"
+      "ConsoleProtect": "./components/protection/SusanooProtection",
+      "ConsoleProtectBackend": "./components/backend/SusanooBackendSetup",
+      "ConsoleProtectObjectCreate": "./components/SusanooObjectCreate",
+      "ConsoleProtectApplicationDetails": "./components/protect/SusanooProtectApplicationDetails",
+      "ConsoleProtectionDetails": "./components/protection/SusanooProtectionDetails"      
     },
     "dependencies": {
       "@console/pluginAPI": "*"

@@ -17,16 +17,16 @@
       "model": {
         "group": "netapp.com",
         "version": "v1",
-        "kind": "netapp-openshift-console-trident"
+        "kind": "netapp-openshift-console-protect"
       }
     }
   },
   {
     "type": "console.navigation/section",
     "properties": {
-      "id": "admin-protect-section",
+      "id": "admin-console-protect-section",
       "perspective": "admin",
-      "name": "NetApp Protection Console",
+      "name": "NetApp Protect Console",
       "insertBefore": "builds"
     }
   },  
@@ -34,49 +34,49 @@
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-protection"],
+      "path": ["/console-protect-protection"],
       "component": { 
-        "$codeRef": "SusanooProtection" 
+        "$codeRef": "ConsoleProtect" 
       }
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-protect-protection",
-      "name": "Protection",
-      "href": "/susanoo-protection",
+      "id": "admin-protect-protect",
+      "name": "Protect",
+      "href": "/console-protect-protection",
       "perspective": "admin",
-      "section": "admin-protect-section"
+      "section": "admin-console-protect-section"
     }
   },
   {
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-backend"],
+      "path": ["/console-protect-backend"],
       "component": { 
-        "$codeRef": "SusanooBackendSetup" 
+        "$codeRef": "ConsoleProtectBackend" 
       }
     }
   },
   {
     "type": "console.navigation/href",
     "properties": {
-      "id": "admin-protect-backend",
+      "id": "admin-console-protect-backend",
       "name": "Setup",
-      "href": "/susanoo-backend",
+      "href": "/console-protect-backend",
       "perspective": "admin",
-      "section": "admin-protect-section"
+      "section": "admin-console-protect-section"
     }
   },      
   {
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-create-object"],
+      "path": ["/console-protect-create-object"],
       "component": { 
-        "$codeRef": "SusanooObjectCreate" 
+        "$codeRef": "ConsoleProtectObjectCreate" 
       }
     }
   },
@@ -84,9 +84,9 @@
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-protect-details"],
+      "path": ["/console-protect-details"],
       "component": { 
-        "$codeRef": "SusanooProtectApplicationDetails" 
+        "$codeRef": "ConsoleProtectApplicationDetails" 
       }
     }
   },
@@ -94,9 +94,9 @@
     "type": "console.page/route",
     "properties": {
       "exact": true,
-      "path": ["/susanoo-protection-details"],
+      "path": ["/console-protect-details"],
       "component": { 
-        "$codeRef": "SusanooProtectionDetails" 
+        "$codeRef": "ConsoleProtectionDetails" 
       }
     }
   }

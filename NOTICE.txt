@@ -1,6 +1,6 @@
 Copyright 2025
 
-[netapp-openshift-console-protect : 25.6.25]
+[netapp-openshift-console-trident : 25.6.25]
 
 Project tier: 1
 Phase: PLANNING
