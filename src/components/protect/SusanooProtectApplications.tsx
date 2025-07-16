@@ -354,7 +354,7 @@ const SusanooProtectApplication = () => {
                   setIsDetailsOpen(false);
                 } else if (value === 'more-details') {
                   history.push({
-                    pathname: '/susanoo-protect-details',
+                    pathname: '/console-protect-details',
                     state: { application: obj.metadata.name },
                   });
                 }

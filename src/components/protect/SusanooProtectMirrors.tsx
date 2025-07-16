@@ -105,7 +105,7 @@ const SusanooProtectMirrors = () => {
   const history = useHistory();
   const handleOpenSusanooObjectCreate = (resourceData: string) => {
     history.push({
-      pathname: '/netapp-create-object',
+      pathname: '/console-protect-create-object',
       state: { initialResource: {yaml: resourceData} }
     })
   };

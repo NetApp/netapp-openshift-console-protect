@@ -278,7 +278,7 @@ const SusanooProtection = () => {
               onSelect={(_event, value) => {
                 if (value === 'more-details') {
                   history.push({
-                    pathname: '/susanoo-protection-details',
+                    pathname: '/console-protect-details',
                     state: { application: obj.metadata.name, namespaces: namespaces },
                   });
                 }
