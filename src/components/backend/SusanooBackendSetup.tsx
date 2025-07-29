@@ -408,19 +408,19 @@ export const SusanooProtectDeployProgress = () => {
                 </Text>
               </TextContent>
             </WizardStep>
-            <WizardStep name="Access Control" id="trident-protect-rbac">
+            <WizardStep name="Access Control" id="trident-protect-rbac" isDisabled>
               <TextContent>
                 <Text component={TextVariants.h1}>RBAC</Text>
                 <Text component={TextVariants.p}>Future feature to configure multi-tenancy for Trident Protect.</Text>
               </TextContent>
             </WizardStep>
-            <WizardStep name="Monitoring" id="trident-protect-monitoring" >
+            <WizardStep name="Monitoring" id="trident-protect-monitoring" isDisabled>
               <TextContent>
                 <Text component={TextVariants.h1}>Monitoring</Text>
                 <Text component={TextVariants.p}>Future feature to configure a Prometheus endpoint.</Text>
               </TextContent>
             </WizardStep>
-            <WizardStep name="Resource Limitations" id="trident-protect-resources" >
+            <WizardStep name="Resource Limitations" id="trident-protect-resources" isDisabled>
               <TextContent>
                 <Text component={TextVariants.h1}>Resources Limitations</Text>
                 <Text component={TextVariants.p}>Future feature to configure a resources limitations for Protect jobs.</Text>
@@ -430,7 +430,7 @@ export const SusanooProtectDeployProgress = () => {
               <SusanooTridentProtectAppVaultDetails application={selectedResource.name} />
               <TextContent>
                 <Text component={TextVariants.h1}>Help</Text>
-                <Text component={TextVariants.p}>The Application Vault object defines a remote location, often a S3 endpoint, to offload the application backups taken on this cluster. This allows to restore the entire application as it was when the backup was taken on this cluster or any other one that have Trident Protect deployed.</Text>
+                <Text component={TextVariants.p}>The Application Vault defines a remote location, a S3 endpoint, to offload the application backups taken on this cluster. This provides an off-cluster copy of the backup to be restored on the same cluster or a different one.</Text>
               </TextContent>
             </WizardStep>
           </Wizard>
