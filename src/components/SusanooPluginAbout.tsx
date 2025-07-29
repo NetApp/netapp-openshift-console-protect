@@ -16,7 +16,7 @@ const SusanooPluginAbout = () => {
         <TextContent>
         <TextList component='dl'>
           <TextListItem component='dt'>Version</TextListItem>
-          <TextListItem component='dd'>25.6.25</TextListItem>
+          <TextListItem component='dd'>25.7.29</TextListItem>
           <TextListItem component='dt'>Docs & Help</TextListItem>
           <TextListItem component='dd'>            <a 
               href="https://github.com/NetApp/netapp-openshift-console-protect" 
