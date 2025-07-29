@@ -29,7 +29,7 @@ const SusanooProtectCreateActivationKey: React.FC<ActivationKeyFormProps> = ({ i
       kind: 'Secret',
       metadata: {
         name: 'eap-activation-key',
-        namespace: 'trident',
+        namespace: 'trident-protect',
       },
       data: {
         activationKey: btoa(activationKey),

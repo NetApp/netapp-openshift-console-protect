@@ -42,7 +42,7 @@ import {
   CardFooter,
   FlexItem,
   Text,
-  // Alert,
+  Alert,
 } from '@patternfly/react-core';
 import CreateAppDefForm from '../protect/SusanooProtectCreateAppDef';
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
@@ -467,9 +467,9 @@ const SusanooWorkloadDetails = () => {
   if (!isValidKey) {
     return (
       <>
-        {/* <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
+        <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
           The Early Access Program activation key is missing or expired. Please contact your administrator.
-        </Alert> */}
+        </Alert>
         <ListPageHeader title="Protection">
           <Button
             variant="primary"
