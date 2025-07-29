@@ -20,11 +20,6 @@ import { CustomizationResource } from '../../k8s/types';
 import { 
   Label, 
   Tooltip, 
-  Dropdown, 
-  DropdownItem, 
-  DropdownList, 
-  MenuToggle, 
-  MenuToggleElement, 
   Stack,
   StackItem,
   Button,
@@ -43,9 +38,12 @@ import {
   FlexItem,
   Text,
   Alert,
+  Level,
+  CardExpandableContent,
 } from '@patternfly/react-core';
 import CreateAppDefForm from '../protect/SusanooProtectCreateAppDef';
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
+import { RepositoryIcon, TrashIcon } from '@patternfly/react-icons';
 
 type SusanooProtectionTableProps = {
   data: CustomizationResource[];
@@ -222,7 +220,6 @@ const SusanooProtection = () => {
 
     const SusanooTableRow: React.FC<RowProps<K8sResourceKind>> = ({ obj, activeColumnIDs }) => {
 
-      const [isOpen, setIsOpen] = React.useState(false);
       const groupVersionKind = getGroupVersionKindForResource(obj);
 
       const namespaces = obj.spec?.includedNamespaces?.map((ns: { namespace: string }) => ns.namespace) || [];
@@ -275,34 +272,25 @@ const SusanooProtection = () => {
             </Tooltip>
           </TableData>
           <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
-            <Dropdown
-              isOpen={isOpen}
-              onSelect={(_event, value) => {
-                if (value === 'more-details') {
-                  history.push({
-                    pathname: '/console-protect-details',
-                    state: { application: obj.metadata.name, namespaces: namespaces },
-                  });
-                }
-                setIsOpen(false);
+            <Button
+              variant="plain"
+              aria-label="More details"
+              title="More details"
+              icon={<RepositoryIcon />}
+              onClick={() => {
+                history.push({
+                  pathname: '/console-protect-details',
+                  state: { application: obj.metadata.name, namespaces: namespaces },
+                });
               }}
-              onOpenChange={(isOpen: boolean) => setIsOpen(isOpen)}
-              toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                <MenuToggle
-                  ref={toggleRef}
-                  aria-label="Actions"
-                  onClick={() => setIsOpen(!isOpen)}
-                  isExpanded={isOpen}
-                >
-                  Actions
-                </MenuToggle>
-              )}
-            >
-              <DropdownList>
-                <DropdownItem value="more-details" key="more-details">More details</DropdownItem>               
-                <DropdownItem value="delete" key="delete" className="pf-m-danger">Delete</DropdownItem>
-              </DropdownList>
-            </Dropdown>
+            />
+            <Button
+              variant="plain"
+              aria-label="Delete"
+              title="Delete"
+              icon={<TrashIcon />}
+              isDisabled
+            />
           </TableData>
         </>
       );
@@ -356,19 +344,60 @@ const SusanooProtection = () => {
   const [data, filteredData, onFilterChange] = useListPageFilter(application, filters);
   const [isAppModalOpen, setIsAppModalOpen] = React.useState(false);
 
+  const [isAppRefCardExpanded, setIsAppRefCardExpanded] = React.useState(false);
+  const onAppRefCardExpand = () => {
+    setIsAppRefCardExpanded(!isAppRefCardExpanded);
+  };
+  const appRefAction = (
+    <Button variant='primary' onClick={() => setIsAppModalOpen(true)}>Create</Button>
+  )
+
+
   return (
     <>
       <ListPageHeader title="Application References">
-      <Button
-          variant="primary"
-          onClick={() => {
-            setIsAppModalOpen(true);
-          }}
-        >
-          Create
-        </Button>
-      </ListPageHeader>            
+      </ListPageHeader>  
       <ListPageBody>
+        <Grid hasGutter>
+          <Card ouiaId='susanoo-trident-protect-application' isExpanded={isAppRefCardExpanded}>
+            <CardHeader
+              actions={{ actions: appRefAction }}
+              onExpand={onAppRefCardExpand}
+              toggleButtonProps={{
+                'aria-label': 'Toggle Card',
+                'aria-expanded': isAppRefCardExpanded,
+                'aria-labelledby': 'titleID toggle-button',
+                id: 'toggle-button',
+              }}
+            >
+              {isAppRefCardExpanded && <CardTitle id="titleID">Application References</CardTitle>}
+              {!isAppRefCardExpanded && (
+                <Level hasGutter>
+                  <CardTitle id='titleID'>Application References</CardTitle>
+                </Level>
+              )}
+            </CardHeader>
+            <CardExpandableContent>
+              <CardBody>
+                <ListPageFilter
+                  data={data}
+                  loaded={loaded}
+                  rowFilters={filters}
+                  onFilterChange={onFilterChange}
+                />
+                <SusanooTable 
+                  data={filteredData} 
+                  unfilteredData={data} 
+                  loaded={loaded} 
+                  error={error} 
+                  value={backup} 
+                />              
+              </CardBody>
+            </CardExpandableContent>
+          </Card>
+        </Grid>
+      </ListPageBody>  
+      {/* <ListPageBody>
         <ListPageFilter
           data={data}
           loaded={loaded}
@@ -382,7 +411,7 @@ const SusanooProtection = () => {
           error={error} 
           value={backup} 
         />
-      </ListPageBody>
+      </ListPageBody> */}
       {<CreateAppDefForm isOpen={isAppModalOpen} onClose={() => setIsAppModalOpen(false)} />}
     </>
   );
@@ -483,15 +512,6 @@ const SusanooWorkloadDetails = () => {
         </ListPageHeader>
         <ListPageBody>
           <Grid hasGutter>
-              <Card>
-                <CardTitle>BlueXP Backup & Recovery</CardTitle>
-                <CardBody>
-                  <TextContent>
-                    <p>BlueXP Backup & Recovery is a full comprehensive GUI-based user experience simplifying advanced data protection workflows for your critical workloads. With its advanced features, it provides one-click enterprise business continuity capabilities, enabling you to safeguard your application and data complying with your governance and regulations.</p>
-                    <p>To get started, add your BlueXP activation key using the Protect wizard within the Susanoo Setup section.</p>
-                  </TextContent>
-                </CardBody>
-              </Card>
               <Card>
                 <CardTitle>Trident Protect</CardTitle>
                 <CardBody>

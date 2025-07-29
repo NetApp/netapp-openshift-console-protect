@@ -14,8 +14,9 @@ import {
   k8sDelete,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { CustomizationResource } from 'src/k8s/types';
-import { Button, Dropdown, DropdownItem, DropdownList, MenuToggle, MenuToggleElement, Modal } from '@patternfly/react-core';
+import { Button, Modal } from '@patternfly/react-core';
 import SusanooTridentProtectCreateAppVault from './SusanooTridentProtectCreateAppVault';
+import { TrashIcon } from '@patternfly/react-icons';
 
 type SusanooTridentProtectAppVaultProps = {
   application: string;
@@ -34,7 +35,6 @@ const SusanooTridentProtectAppVault: React.FC<SusanooTridentProtectAppVaultProps
   
     const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
 
-        const [isActionOpen, setIsActionOpen] = React.useState(false);      
         const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
         const [resourceToDelete, setResourceToDelete] = React.useState<CustomizationResource | null>(null);
 
@@ -81,30 +81,12 @@ const SusanooTridentProtectAppVault: React.FC<SusanooTridentProtectAppVaultProps
               {obj.metadata?.creationTimestamp}
             </TableData>
             <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
-              <Dropdown
-                isOpen={isActionOpen}
-                onSelect={(_event, value) => {
-                  if (value === 'delete') {
-                    confirmDelete(obj);
-                  }
-                  setIsActionOpen(false);
-                }}
-                onOpenChange={(isActionOpen: boolean) => setIsActionOpen(isActionOpen)}
-                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                  <MenuToggle
-                    ref={toggleRef}
-                    aria-label="backendconfig-actions"
-                    onClick={() => setIsActionOpen(!isActionOpen)}
-                    isExpanded={isActionOpen}
-                  >
-                    Actions
-                  </MenuToggle>
-                )}
-              >
-                <DropdownList>
-                  <DropdownItem value="delete" key="delete">Delete</DropdownItem>
-                </DropdownList>
-              </Dropdown>
+              <Button
+                variant="plain"
+                aria-label="Delete"
+                onClick={() => confirmDelete(obj)}
+                icon={<TrashIcon />}
+              />
             </TableData>
 
             <Modal
