@@ -6,7 +6,10 @@ import {
   Button,
   Modal,
 } from '@patternfly/react-core';
-import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
+import { 
+  k8sCreate, 
+  k8sGet 
+} from '@openshift-console/dynamic-plugin-sdk';
 
 type SusanooTridentProtectHelmProps = {
   isOpen: boolean;
@@ -21,13 +24,13 @@ const SusanooTridentProtectHelmForm: React.FC<SusanooTridentProtectHelmProps> = 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name) {
       console.error('Required fields are missing');
       return;
     }
 
-    const namespace = {
+    const namespaceObj = {
       apiVersion: 'project.openshift.io/v1',
       kind: 'Project',
       metadata: {
@@ -36,7 +39,7 @@ const SusanooTridentProtectHelmForm: React.FC<SusanooTridentProtectHelmProps> = 
           'susanoo.trident.netapp.io': 'true',
         },
       },
-    }; 
+    };
 
     const helmChart = {
       apiVersion: 'helm.openshift.io/v1beta1',
@@ -57,38 +60,91 @@ const SusanooTridentProtectHelmForm: React.FC<SusanooTridentProtectHelmProps> = 
     };
 
     try {
-      // Create the namespace first
-      await k8sCreate({
-        model: {
-          apiGroup: 'project.openshift.io',
-          apiVersion: 'v1',
-          kind: 'Project',
-          abbr: 'PR',
-          label: 'Project',
-          labelPlural: 'Projects',
-          plural: 'projects',
-          namespaced: false,
-          crd: true,
-        },
-        data: namespace,
-      });
-      console.log('Namespace created successfully');
-      // Then create the Helm Chart Repository
-      await k8sCreate({
-        model: {
-          apiGroup: 'helm.openshift.io',
-          apiVersion: 'v1beta1',
-          kind: 'ProjectHelmChartRepository',
-          abbr: 'PHCR',
-          label: 'ProjectHelmChartRepository',
-          labelPlural: 'ProjectHelmChartRepositories',
-          plural: 'projecthelmchartrepositories',
-          namespaced: true,
-          crd: true,
-        },
-        data: helmChart,
-      });
-      console.log('Trident Protect Helm Chart created successfully');
+      // Check if namespace exists
+      let nsExists = false;
+      try {
+        await k8sGet({
+          model: {
+            apiGroup: 'project.openshift.io',
+            apiVersion: 'v1',
+            kind: 'Project',
+            abbr: 'PR',
+            label: 'Project',
+            labelPlural: 'Projects',
+            plural: 'projects',
+            namespaced: false,
+            crd: true,
+          },
+          name: 'trident-protect',
+        });
+        nsExists = true;
+        console.log('Namespace already exists');
+      } catch (err: any) {
+        nsExists = false;
+      }
+
+      // If namespace does not exist, create it
+      if (!nsExists) {
+        await k8sCreate({
+          model: {
+            apiGroup: 'project.openshift.io',
+            apiVersion: 'v1',
+            kind: 'Project',
+            abbr: 'PR',
+            label: 'Project',
+            labelPlural: 'Projects',
+            plural: 'projects',
+            namespaced: false,
+            crd: true,
+          },
+          data: namespaceObj,
+        });
+        console.log('Namespace created successfully');
+      }
+
+      // Check if Helm Chart Repository exists in the namespace
+      let helmExists = false;
+      try {
+        await k8sGet({
+          model: {
+            apiGroup: 'helm.openshift.io',
+            apiVersion: 'v1beta1',
+            kind: 'ProjectHelmChartRepository',
+            abbr: 'PHCR',
+            label: 'ProjectHelmChartRepository',
+            labelPlural: 'ProjectHelmChartRepositories',
+            plural: 'projecthelmchartrepositories',
+            namespaced: true,
+            crd: true,
+          },
+          name: 'trident-protect',
+          ns: 'trident-protect',
+        });
+        helmExists = true;
+        console.log('Helm Chart Repository already exists');
+      } catch (err: any) {
+        helmExists = false;
+      }
+
+      // If Helm Chart Repository does not exist, create it
+      if (!helmExists) {
+        await k8sCreate({
+          model: {
+            apiGroup: 'helm.openshift.io',
+            apiVersion: 'v1beta1',
+            kind: 'ProjectHelmChartRepository',
+            abbr: 'PHCR',
+            label: 'ProjectHelmChartRepository',
+            labelPlural: 'ProjectHelmChartRepositories',
+            plural: 'projecthelmchartrepositories',
+            namespaced: true,
+            crd: true,
+          },
+          data: helmChart,
+        });
+        console.log('Trident Protect Helm Chart created successfully');
+      }
+
       onClose();
     } catch (err) {
       console.error('Failed to create Helm Chart resources:', err);

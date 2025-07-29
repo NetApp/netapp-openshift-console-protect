@@ -227,6 +227,19 @@ export const SusanooProtectDeployProgress = () => {
   const isHelmRepoPresent = helmData.some((item) => item.spec?.name === 'trident-protect');
   // const [isAppVaultOpen, setIsAppVaultOpen ] = React.useState(false);
 
+
+  const helmReleaseResources = {
+    group: 'apps',
+    version: 'v1',
+    kind: 'Deployment',
+  };
+  const [helmReleaseData] = useK8sWatchResource<CustomizationResource[]>({
+    groupVersionKind: helmReleaseResources,
+    isList: true,
+    namespaced: true,
+  });
+  const isHelmReleasePresent = helmReleaseData.some((item) => item.metadata?.name === 'trident-protect-controller-manager');
+  
   const [ selectedResource, setSelectedResource ] = React.useState<{ namespace: string, name: string } | null>(null);
 
   if (isLoading) {
@@ -286,19 +299,19 @@ export const SusanooProtectDeployProgress = () => {
                   Helm Repository
                 </ProgressStep>
                 <ProgressStep
-                  variant='warning'   
+                  variant={isHelmReleasePresent ? 'success' : 'pending'}  
                   id="protect-2"
                   titleId='protect-2' 
                   popoverRender={(stepRef) =>
                     <Popover 
                       ariad-label="Protect Helm Installation"
                       headerContent="Trident Protect Helm Charts"
-                      bodyContent={"Deploying the Trident Protect CRDs and orchestrator requires a mnaual process to enable basic Protect workflows on Red Hat OpenShift."}
+                      bodyContent={isHelmReleasePresent ? "Trident Protect Helm Charts installed successfully." : "Click Actions to deploy the NetApp supported Helm Charts that manages Trident Protect deployment and maintenance on Red Hat OpenShift."}
                       triggerRef={stepRef}
                     />
                   }
                 >
-                  Helm CRDs
+                  Helm Release
                 </ProgressStep>                                
                 <ProgressStep
                   icon={<CloudSecurityIcon />} 
@@ -370,6 +383,30 @@ export const SusanooProtectDeployProgress = () => {
               </TextContent>
             </WizardStep>
             <WizardStep name="CRDs" id="trident-protect-crds" >
+                <TextContent>
+                <Text component={TextVariants.h1}>Help</Text>
+                <Text component={TextVariants.p}>This step requires a manual intervention to install the controller & CRDs for Trident Protect.</Text>
+                <Text component={TextVariants.p}>To install the CRDs, follow either the GUI:</Text>
+                <Text component={TextVariants.p}>
+                  <ul>
+                    <li>
+                      Go in the Developer view, select the project <b>trident-protect</b>
+                    </li>
+                    <li>
+                      Click on <b>Helm</b> then click the button <b>Create</b> and select <b>Helm Release</b>
+                    </li>
+                    <li>
+                      Search <b>Trident Protect</b> and click the tile with the same name
+                    </li>
+                    <li>
+                      Click the button <b>Create</b>
+                    </li>
+                    <li>
+                      Edit any value you see fit before clicking <b>Create</b>
+                    </li>
+                  </ul>
+                </Text>
+              </TextContent>
             </WizardStep>
             <WizardStep name="Access Control" id="trident-protect-rbac">
               <TextContent>

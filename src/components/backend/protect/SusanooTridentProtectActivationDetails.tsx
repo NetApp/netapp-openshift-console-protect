@@ -18,7 +18,7 @@ import {
   Button, 
   Modal 
 } from '@patternfly/react-core';
-import { TrashIcon, InfoCircleIcon } from '@patternfly/react-icons';
+import { TrashIcon } from '@patternfly/react-icons';
 import SusanooProtectCreateActivationKey from '../../protect/SusanooProtectCreateActivationKey';
 import { jwtDecode }  from 'jwt-decode';
 
@@ -97,18 +97,6 @@ const SusanooTridentProtectActivation: React.FC<SusanooTridentProtectActivationP
               {expString}
             </TableData>
             <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
-              <Button
-                variant="plain"
-                aria-label="View"
-                onClick={() => {
-                  window.open(
-                    `/k8s/ns/${obj.metadata?.namespace}/secrets/${obj.metadata?.name}`,
-                    '_blank',
-                    'noopener,noreferrer'
-                  );
-                }}
-                icon={<InfoCircleIcon />}
-              />
               <Button
                 variant="plain"
                 aria-label="Delete"
