@@ -49,7 +49,7 @@ const SusanooProtectCreateActivationKey: React.FC<ActivationKeyFormProps> = ({ i
           crd: true
         },
         data: secret,
-        ns: 'trident'
+        ns: 'trident-protect'
       });
       console.log('Activation key created successfully');
       onClose();

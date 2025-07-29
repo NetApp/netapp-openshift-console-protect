@@ -441,16 +441,6 @@ const SusanooWorkloadDetails = () => {
 
   const { isValidKey, isLoading } = useActivationKeyCheck();
 
-  // if (!isValidKey) {
-  //   return (
-  //     <div style={{ padding: '2rem', textAlign: 'center' }}>
-  //       <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
-  //         The Early Access Program activation key is missing or expired. Please contact your administrator.
-  //       </Alert>
-  //     </div>
-  //   );
-  // }
-
   const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
   const handleHelpModalToggle = () => {
     setIsHelpModalOpen(!isHelpModalOpen);
@@ -468,7 +458,7 @@ const SusanooWorkloadDetails = () => {
     return (
       <>
         <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
-          The Early Access Program activation key is missing or expired. Please contact your administrator.
+          The Early Access Program activation key is missing or expired. Please contact your NetApp EAP Contact.
         </Alert>
         <ListPageHeader title="Protection">
           <Button
