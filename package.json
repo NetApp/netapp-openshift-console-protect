@@ -109,7 +109,7 @@
       "ConsoleProtectBackend": "./components/backend/SusanooBackendSetup",
       "ConsoleProtectObjectCreate": "./components/SusanooObjectCreate",
       "ConsoleProtectApplicationDetails": "./components/protect/SusanooProtectApplicationDetails",
-      "ConsoleProtectionDetails": "./components/protection/SusanooProtectionDetails"      
+      "ConsoleProtectionDetails": "./components/protection/SusanooProtectionDetails"
     },
     "dependencies": {
       "@console/pluginAPI": "*"
@@ -124,6 +124,7 @@
   },
   "dependencies": {
     "@openshift-console/plugin-shared": "^0.0.3",
+    "jwt-decode": "^4.0.0",
     "remark-gfm": "^4.0.0"
   }
 }

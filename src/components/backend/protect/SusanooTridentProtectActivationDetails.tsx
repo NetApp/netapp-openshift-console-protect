@@ -14,8 +14,13 @@ import {
   k8sDelete,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { CustomizationResource } from 'src/k8s/types';
-import { Button, Dropdown, DropdownItem, DropdownList, MenuToggle, MenuToggleElement, Modal } from '@patternfly/react-core';
+import { 
+  Button, 
+  Modal 
+} from '@patternfly/react-core';
+import { TrashIcon, InfoCircleIcon } from '@patternfly/react-icons';
 import SusanooProtectCreateActivationKey from '../../protect/SusanooProtectCreateActivationKey';
+import { jwtDecode }  from 'jwt-decode';
 
 type SusanooTridentProtectActivationProps = {
   application: string;
@@ -27,12 +32,12 @@ const SusanooTridentProtectActivation: React.FC<SusanooTridentProtectActivationP
       { title: 'Name', id: 'name' },
       { title: 'Namespace', id: 'namespace' },
       { title: 'Created at', id: 'creationTimestamp'},
+      { title: 'Expiration', id: 'expiration' },
       { title: '', id: 'actions' },
     ];
   
     const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
 
-        const [isActionOpen, setIsActionOpen] = React.useState(false);      
         const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
         const [resourceToDelete, setResourceToDelete] = React.useState<CustomizationResource | null>(null);
 
@@ -57,6 +62,22 @@ const SusanooTridentProtectActivation: React.FC<SusanooTridentProtectActivationP
           setIsDeleteModalOpen(true);
         };
 
+        // Extract and decode JWT expiration
+        let expString = '';
+        try {
+          const encoded = obj.data?.activationKey;
+          if (encoded) {
+            const decoded = atob(encoded);
+            const jwt: any = jwtDecode(decoded);
+            if (jwt.exp) {
+              const date = new Date(jwt.exp * 1000);
+              expString = date.toLocaleString();
+            }
+          }
+        } catch {
+          expString = '';
+        }
+
         return (
           <>
             <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
@@ -72,31 +93,28 @@ const SusanooTridentProtectActivation: React.FC<SusanooTridentProtectActivationP
             <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs}>
               {obj.metadata?.creationTimestamp}
             </TableData>
-            <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
-              <Dropdown
-                isOpen={isActionOpen}
-                onSelect={(_event, value) => {
-                  if (value === 'delete') {
-                    confirmDelete(obj);
-                  }
-                  setIsActionOpen(false);
+            <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs}>
+              {expString}
+            </TableData>
+            <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
+              <Button
+                variant="plain"
+                aria-label="View"
+                onClick={() => {
+                  window.open(
+                    `/k8s/ns/${obj.metadata?.namespace}/secrets/${obj.metadata?.name}`,
+                    '_blank',
+                    'noopener,noreferrer'
+                  );
                 }}
-                onOpenChange={(isActionOpen: boolean) => setIsActionOpen(isActionOpen)}
-                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                  <MenuToggle
-                    ref={toggleRef}
-                    aria-label="backendconfig-actions"
-                    onClick={() => setIsActionOpen(!isActionOpen)}
-                    isExpanded={isActionOpen}
-                  >
-                    Actions
-                  </MenuToggle>
-                )}
-              >
-                <DropdownList>
-                  <DropdownItem value="delete" key="delete">Delete</DropdownItem>
-                </DropdownList>
-              </Dropdown>
+                icon={<InfoCircleIcon />}
+              />
+              <Button
+                variant="plain"
+                aria-label="Delete"
+                onClick={() => confirmDelete(obj)}
+                icon={<TrashIcon />}
+              />
             </TableData>
 
             <Modal
@@ -160,7 +178,7 @@ const SusanooTridentProtectActivation: React.FC<SusanooTridentProtectActivationP
   
     return (
       <>
-        <ListPageHeader title="Trident Protect Activation">
+        <ListPageHeader title="Trident Protect EAP Activation">
           <Button 
             variant="primary"
             onClick={() => {setIsOpen(true);}}
@@ -170,7 +188,11 @@ const SusanooTridentProtectActivation: React.FC<SusanooTridentProtectActivationP
         </ListPageHeader>
         <ListPageBody>
           <CustomizationTable 
-            data={data.filter((item) => item.metadata?.name?.includes('susanoo-activation-key'))}
+            data={data.filter(
+              (item) =>
+                item.metadata?.name?.includes('eap-activation-key') &&
+                item.metadata?.namespace === 'trident-protect'
+            )}
             unfilteredData={data}
             loaded={loaded}
             error={error}

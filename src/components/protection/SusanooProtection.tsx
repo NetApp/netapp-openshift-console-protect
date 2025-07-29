@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  K8sResourceCommon,
+  // K8sResourceCommon,
   K8sResourceKind,
   ListPageBody,
   ListPageFilter,
@@ -42,8 +42,10 @@ import {
   CardFooter,
   FlexItem,
   Text,
+  // Alert,
 } from '@patternfly/react-core';
 import CreateAppDefForm from '../protect/SusanooProtectCreateAppDef';
+import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 
 type SusanooProtectionTableProps = {
   data: CustomizationResource[];
@@ -437,34 +439,37 @@ const SusanooBasicProtect: React.FC = () => {
 
 const SusanooWorkloadDetails = () => {
 
-  interface SecretResource extends K8sResourceCommon {
-    data?: {
-      [key: string]: string;
-    };
-  }
+  const { isValidKey, isLoading } = useActivationKeyCheck();
 
-  const secretResource = {
-      group: '',
-      version: 'v1',
-      kind: 'Secret',
-      name: 'susanoo-activation-key',
-      namespace: 'trident',
-  };
-
-  const [secret] = useK8sWatchResource<SecretResource>(secretResource);
-
-  const activationKey = secret?.data?.activationKey
-    ? atob(secret.data.activationKey)
-    : null;
+  // if (!isValidKey) {
+  //   return (
+  //     <div style={{ padding: '2rem', textAlign: 'center' }}>
+  //       <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
+  //         The Early Access Program activation key is missing or expired. Please contact your administrator.
+  //       </Alert>
+  //     </div>
+  //   );
+  // }
 
   const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
   const handleHelpModalToggle = () => {
     setIsHelpModalOpen(!isHelpModalOpen);
   };
 
-  if (activationKey !== 'test') {
+  if (isLoading) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <span>Loading...</span>
+      </div>
+    );
+  }
+
+  if (!isValidKey) {
     return (
       <>
+        {/* <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
+          The Early Access Program activation key is missing or expired. Please contact your administrator.
+        </Alert> */}
         <ListPageHeader title="Protection">
           <Button
             variant="primary"

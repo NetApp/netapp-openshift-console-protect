@@ -41,14 +41,14 @@ import {
 } from '@patternfly/react-core';
 import { 
   EllipsisVIcon,
-  OutlinedCalendarAltIcon, 
+  CloudSecurityIcon, 
 } from '@patternfly/react-icons';
 import { 
   useHistory 
 } from 'react-router';
 import SusanooPluginAbout from '../SusanooPluginAbout';
 import NetAppLogo from '../../assets/images/NA_logo_white_rgb.png';
-import useActivationKeyCheck from '../SusanooActivationKeyCheck';
+import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 import SusanooTridentProtectActivationDetails from './protect/SusanooTridentProtectActivationDetails';
 import SusanooTridentProtectHelmDetails from './protect/SusanooTridentProtectHelmDetails';
 import SusanooTridentProtectAppVaultDetails from './protect/SusanooTridentProtectAppVaultDetails';
@@ -256,6 +256,21 @@ export const SusanooProtectDeployProgress = () => {
               isCenterAligned
               >
                 <ProgressStep
+                  variant={isValidKey ? 'success' : 'warning'}   
+                  id="protect-3"
+                  titleId='protect-3' 
+                  popoverRender={(stepRef) =>
+                    <Popover 
+                      ariad-label="Activate EAP"
+                      headerContent="Trident Protect EAP Activation"
+                      bodyContent={isValidKey ? "Trident Protect EAP successfully activated." : "Click Actions to enter the activation key."}
+                      triggerRef={stepRef}
+                    />
+                  }
+                >
+                  EAP Activation
+                </ProgressStep>                
+                <ProgressStep
                   variant={isHelmRepoPresent ? 'success' : 'pending'}   
                   id="protect-1"
                   titleId='protect-1' 
@@ -286,67 +301,7 @@ export const SusanooProtectDeployProgress = () => {
                   Helm CRDs
                 </ProgressStep>                                
                 <ProgressStep
-                  variant={isValidKey ? 'success' : 'warning'}   
-                  id="protect-3"
-                  titleId='protect-3' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Activate BlueXP Backup & Recovery"
-                      headerContent="BlueXP Backup & Recovery"
-                      bodyContent={isValidKey ? "BlueXP Backup & Protect successfully activated." : "Click Actions to enter the activation key."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  BlueXP Backup & Recovery
-                </ProgressStep>
-                {/* <ProgressStep
-                  icon={<OutlinedCalendarAltIcon />} 
-                  id="protect-4"
-                  titleId='protect-4' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Protect Access Control"
-                      headerContent="Trident Protect Access Control"
-                      bodyContent={"This will be added in future releases."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  Access Control
-                </ProgressStep>
-                <ProgressStep
-                  icon={<OutlinedCalendarAltIcon />} 
-                  id="protect-5"
-                  titleId='protect-5' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Protect Monitoring>"
-                      headerContent="Trident Protect Monitoring"
-                      bodyContent={"This will be added in future releases."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  Monitoring
-                </ProgressStep>
-                <ProgressStep
-                  icon={<OutlinedCalendarAltIcon />} 
-                  id="protect-6"
-                  titleId='protect-6' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Protect Resource Limitation"
-                      headerContent="Trident Protect Resource Limitation"
-                      bodyContent={"This will be added in future releases."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  Resource Limitation
-                </ProgressStep> */}
-                <ProgressStep
-                  icon={<OutlinedCalendarAltIcon />} 
+                  icon={<CloudSecurityIcon />} 
                   id="protect-7"
                   titleId='protect-7' 
                   popoverRender={(stepRef) =>
@@ -392,7 +347,7 @@ export const SusanooProtectDeployProgress = () => {
                 <Text component={TextVariants.p}>NetApp Trident Protect provides advanced application data management capabilities that enhance the functionality and availability of stateful Kubernetes applications backed by NetApp ONTAP storage systems and the NetApp Trident CSI storage provisioner. Trident Protect simplifies the management, protection, and movement of containerized and virtualized workloads across public clouds and on-premises environments. It also offers automation capabilities through its API and CLI.</Text>
                 <Text component={TextVariants.p}>The following steps are required to deploy and configure Trident Protect on Red Hat OpenShift:</Text>
                 <TextList component={TextListVariants.ol}>
-                  <TextListItem>Activate Trident Protect</TextListItem>
+                  <TextListItem>Activate Trident Protect EAP</TextListItem>
                   <TextListItem>Add the Helm Chart repository</TextListItem>
                   <TextListItem>Install the Trident Protect CRDs</TextListItem>
                   <TextListItem>Install Trident Protect</TextListItem>
@@ -404,7 +359,7 @@ export const SusanooProtectDeployProgress = () => {
               <TextContent>
               <SusanooTridentProtectActivationDetails application={selectedResource.name} />
                 <Text component={TextVariants.h1}>Help</Text>
-                <Text component={TextVariants.p}>This steps is a feature gate test. The activation key value is "test".</Text>
+                <Text component={TextVariants.p}>This steps enables the Early Access Program for Trident Protect with the provided key by NetApp.</Text>
               </TextContent>
             </WizardStep>
             <WizardStep name="Helm Charts" id="trident-protect-helm">
