@@ -28,7 +28,7 @@ const SusanooProtectCreateActivationKey: React.FC<ActivationKeyFormProps> = ({ i
       apiVersion: 'v1',
       kind: 'Secret',
       metadata: {
-        name: 'susanoo-activation-key',
+        name: 'eap-activation-key',
         namespace: 'trident',
       },
       data: {
