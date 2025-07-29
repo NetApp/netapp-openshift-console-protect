@@ -11,7 +11,7 @@ const SusanooPluginAbout = () => {
       <>
         <TextContent>
           <p>The open-source project <strong>netapp-openshift-console-protect</strong> for Red Hat OpenShift has been designed to improve the user experience connecting with the NetApp portfolio.</p>
-          <p>The project is provided <strong>AS-IS</strong> under the <a href="https://github.com/NetApp/netapp-openshift-console-protect?tab=Apache-2.0-1-ov-file#readme" target="_blank">Apache License 2.0</a> with community support only. If you have any questions, open a GitHub Issue using the link below.</p>
+          <p>The project is provided <strong>AS-IS</strong> under the <a href="https://github.com/NetApp/netapp-openshift-console-protect?tab=Apache-2.0-1-ov-file#readme" target="_blank">Apache License 2.0</a> with limited community support only. If you have any questions, open a GitHub Issue using the link below.</p>
         </TextContent>
         <TextContent>
         <TextList component='dl'>
