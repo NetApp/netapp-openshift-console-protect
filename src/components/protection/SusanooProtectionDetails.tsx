@@ -20,21 +20,18 @@ import {
   CardExpandableContent, 
   CardHeader, 
   CardTitle, 
-  Dropdown, 
-  DropdownItem, 
   Grid, 
   Label,
   LabelGroup,
   Level,
-  MenuToggle,
-  MenuToggleElement,
   Stack,
   StackItem,
   Tooltip, 
 } from '@patternfly/react-core';
-import CreateAppSchedForm from '../protect/SusanooProtectCreateAppSched';
-import CreateSnapshotForm from '../protect/SusanooProtectCreateSnapshot';
-import CreateBackupForm from '../protect/SusanooProtectCreateBackup';
+import { OutlinedWindowRestoreIcon, TrashIcon } from '@patternfly/react-icons';
+import CreateAppSchedForm from './SusanooProtectCreateAppSched';
+import CreateSnapshotForm from './SusanooProtectCreateSnapshot';
+import CreateBackupForm from './SusanooProtectCreateBackup';
 
 type SusanooProtectionDetailsProps = {
     application: string;
@@ -631,6 +628,26 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                 <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs}>
                   {obj.metadata?.creationTimestamp}
                 </TableData>
+                <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs}>
+                  <Button
+                    variant="plain"
+                    aria-label="Restore"
+                    icon={<OutlinedWindowRestoreIcon />}
+                    title="Restore"
+                    onClick={() => {
+                      // TODO: implement restore logic
+                    }}
+                  />
+                  <Button
+                    variant="plain"
+                    aria-label="Delete"
+                    icon={<TrashIcon />}
+                    title="Delete"
+                    onClick={() => {
+                      // TODO: implement delete logic
+                    }}
+                  />
+                </TableData>
               </>
             );
           };
@@ -732,7 +749,6 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
     
         const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
           
-          const [isActionsOpen, setIsActionsOpen] = React.useState(false);
           const groupVersionKind = getGroupVersionKindForResource(obj)
 
           return (
@@ -766,28 +782,24 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                   ))}
               </TableData> 
               <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} >
-                <Dropdown
-                  isOpen={isActionsOpen}
-                  onSelect={(_event, value) => {
-                    if (value === 'restore') {
-                    } else if (value === 'delete') {
-                    }
-                    setIsActionsOpen(false);
+                <Button
+                  variant="plain"
+                  aria-label="Restore"
+                  icon={<OutlinedWindowRestoreIcon />}
+                  title="Restore"
+                  onClick={() => {
+                    // TODO: implement restore logic
                   }}
-                  onOpenChange={(isActionsOpen: boolean) => setIsActionsOpen(isActionsOpen)}
-                  toggle={(toggleRef: React.RefObject<MenuToggleElement>) => (
-                    <MenuToggle
-                      ref={toggleRef}
-                      aria-label="Actions"
-                      onClick={() => setIsActionsOpen(!isActionsOpen)}
-                    >
-                      Actions
-                    </MenuToggle> 
-                  )}
-                >
-                  <DropdownItem key="restore" component="button">Restore</DropdownItem>
-                  <DropdownItem key="delete" component="button" className="pf-m-danger">Delete</DropdownItem>
-                </Dropdown>
+                />
+                <Button
+                  variant="plain"
+                  aria-label="Delete"
+                  icon={<TrashIcon />}
+                  title="Delete"
+                  onClick={() => {
+                    // TODO: implement delete logic
+                  }}
+                />
               </TableData>
             </>
           );
@@ -893,7 +905,6 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
       
         const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
        
-          const [isActionsOpen, setIsActionsOpen] = React.useState(false);
           const groupVersionKind = getGroupVersionKindForResource(obj)
 
           return (
@@ -921,28 +932,24 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                 {obj.status?.completionTimestamp}
               </TableData>
               <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} >
-                <Dropdown
-                  isOpen={isActionsOpen}
-                  onSelect={(_event, value) => {
-                    if (value === 'restore') {
-                    } else if (value === 'delete') {
-                    }
-                    setIsActionsOpen(false);
+                <Button
+                  variant="plain"
+                  aria-label="Restore"
+                  icon={<OutlinedWindowRestoreIcon />}
+                  title="Restore"
+                  onClick={() => {
+                    // TODO: implement restore logic
                   }}
-                  onOpenChange={(isActionsOpen: boolean) => setIsActionsOpen(isActionsOpen)}
-                  toggle={(toggleRef: React.RefObject<MenuToggleElement>) => (
-                    <MenuToggle
-                      ref={toggleRef}
-                      aria-label="Actions"
-                      onClick={() => setIsActionsOpen(!isActionsOpen)}
-                    >
-                      Actions
-                    </MenuToggle> 
-                  )}
-                >
-                  <DropdownItem key="restore" component="button">Restore</DropdownItem>
-                  <DropdownItem key="delete" component="button" className="pf-m-danger">Delete</DropdownItem>
-                </Dropdown>
+                />
+                <Button
+                  variant="plain"
+                  aria-label="Delete"
+                  icon={<TrashIcon />}
+                  title="Delete"
+                  onClick={() => {
+                    // TODO: implement delete logic
+                  }}
+                />
               </TableData>
             </>
           );

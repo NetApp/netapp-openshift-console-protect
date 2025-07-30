@@ -17,7 +17,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import { CustomizationResource } from '../../k8s/types';
 import { Button, Label, Tooltip, Dropdown, DropdownItem, DropdownList, MenuToggle, MenuToggleElement, Modal, Grid, Gallery, GalleryItem, Card, CardTitle, CardBody, Flex, Stack, Divider } from '@patternfly/react-core';
-import CreateAppDefForm from './SusanooProtectCreateAppDef';
+import CreateAppDefForm from '../protection/SusanooProtectCreateAppDef';
 import SusanooProtectSchedDetails from './SusanooProtectSchedDetails';
 import SusanooProtectBackupDetails from './SusanooProtectBackupDetails';
 import SusanooProtectSnapshotDetails from './SusanooProtectSnapshotDetails';

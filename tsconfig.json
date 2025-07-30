@@ -17,7 +17,7 @@
   "include": [
     "src",
     "src/__mocks__"
-  ],
+, "__archive__/SusanooProtectApplicationDetails.tsx"  ],
   "exclude": ["node_modules"],
   "ts-node": {
     "files": true,

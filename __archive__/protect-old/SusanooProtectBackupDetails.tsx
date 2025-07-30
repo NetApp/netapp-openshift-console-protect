@@ -12,19 +12,19 @@ import {
   ListPageBody,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { CustomizationResource } from 'src/k8s/types';
-import { Button, Label } from '@patternfly/react-core';
-import CreateSnapshotForm from './SusanooProtectCreateSnapshot';
+import { Button } from '@patternfly/react-core';
+import CreateBackupForm from '../protection/SusanooProtectCreateBackup';
 
 type SusanooProtectAppDetailsProps = {
   application: string;
 };
 
-const SusanooProtectSnapDetails: React.FC<SusanooProtectAppDetailsProps> = ({ application }) => {
+const SusanooProtectBackDetails: React.FC<SusanooProtectAppDetailsProps> = ({ application }) => {
 
     const resources = [{
         group: 'protect.trident.netapp.io',
         version: 'v1',
-        kind: 'Snapshot',
+        kind: 'Backup',
     }];
   
     const columns: TableColumn<K8sResourceCommon>[] = [
@@ -33,24 +33,20 @@ const SusanooProtectSnapDetails: React.FC<SusanooProtectAppDetailsProps> = ({ ap
         id: 'name',
       },
       {
-        title: 'Application',
-        id: 'application',
-      },
-      {
-        title: 'AppVault',
-        id: 'appvault',
-      },
-      {
-        title: 'Created',
-        id: 'created',
+        title: 'Namespace',
+        id: 'namespace',
       },
       {
         title: 'State',
         id: 'state',
       },
       {
-        title: 'Snapshots',
-        id: 'snapshots',
+        title: 'Created',
+        id: 'metadata',
+      },
+      {
+        title: 'Completed at',
+        id: 'completed',
       },
     ];
   
@@ -70,26 +66,17 @@ const SusanooProtectSnapDetails: React.FC<SusanooProtectAppDetailsProps> = ({ ap
             />
           </TableData> 
           <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs} >
-            {obj.spec?.applicationRef}
-          </TableData> 
-          <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs} >
-            {obj.spec?.appVaultRef}
-          </TableData>   
-          <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs} >
-            {obj.metadata?.creationTimestamp} 
-          </TableData>            
-          <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs}>
-            {obj.status?.state}
+            {obj.metadata?.namespace}
           </TableData>
-          <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs} >
-              {obj.status?.volumeSnapshots?.map((snapshot) => (
-                <React.Fragment key={snapshot.name}>
-                  <Label color='blue' isCompact>
-                  {snapshot.name}
-                  </Label>
-                </React.Fragment>
-              ))}
-          </TableData> 
+          <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs} >
+            {obj.status?.state}
+          </TableData>             
+          <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs}>
+            {obj.metadata.creationTimestamp}
+          </TableData>
+          <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs}>
+            {obj.status?.completionTimestamp}
+          </TableData>
         </>
       );
     };
@@ -145,12 +132,12 @@ const SusanooProtectSnapDetails: React.FC<SusanooProtectAppDetailsProps> = ({ ap
   
     return (
       <>
-        <ListPageHeader title="Snapshots">
+        <ListPageHeader title="Backups">
           <Button 
             variant="primary"
             onClick={() => {setIsOpen(true);}}
           >
-            on-demand snapshot
+            on-demand backup
           </Button>
         </ListPageHeader>
         <ListPageBody>
@@ -160,7 +147,7 @@ const SusanooProtectSnapDetails: React.FC<SusanooProtectAppDetailsProps> = ({ ap
             loaded={loaded}
           />
         </ListPageBody>
-        <CreateSnapshotForm 
+        <CreateBackupForm 
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
         />
@@ -168,10 +155,10 @@ const SusanooProtectSnapDetails: React.FC<SusanooProtectAppDetailsProps> = ({ ap
     );
 };
 
-const SusanooProtectSnapshotDetails: React.FC<SusanooProtectAppDetailsProps> = ({ application }) => {
+const SusanooProtectBackupDetails: React.FC<SusanooProtectAppDetailsProps> = ({ application }) => {
     return (
-        <SusanooProtectSnapDetails application={application} />
+        <SusanooProtectBackDetails application={application} />
     );
 }
 
-export default SusanooProtectSnapshotDetails;
+export default SusanooProtectBackupDetails;

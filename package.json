@@ -1,6 +1,6 @@
 {
   "name": "netapp-openshift-console-protect",
-  "version": "25.7.29",
+  "version": "25.7.30",
   "description": "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
   "private": true,
   "license": "Apache-2.0",
@@ -101,14 +101,14 @@
   },
   "consolePlugin": {
     "name": "netapp-openshift-console-protect",
-    "version": "25.7.29",
+    "version": "25.7.30",
     "displayName": "NetApp Console for Trident Protect",
     "description": "NetApp Console Plug-in for Red Hat OpenShift provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
     "exposedModules": {
       "ConsoleProtect": "./components/protection/SusanooProtection",
-      "ConsoleProtectBackend": "./components/backend/SusanooBackendSetup",
-      "ConsoleProtectObjectCreate": "./components/SusanooObjectCreate",
-      "ConsoleProtectionDetails": "./components/protection/SusanooProtectionDetails"
+      "ConsoleProtectionDetails": "./components/protection/SusanooProtectionDetails",
+      "ConsoleProtectBackend": "./components/backend/SusanooProtectBackendSetup",
+      "ConsoleProtectObjectCreate": "./utils/SusanooObjectCreate"
     },
     "dependencies": {
       "@console/pluginAPI": "*"

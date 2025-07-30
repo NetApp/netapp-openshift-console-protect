@@ -13,7 +13,7 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { CustomizationResource } from 'src/k8s/types';
 import { Button, Label, Tooltip } from '@patternfly/react-core';
-import CreateAppSchedForm from './SusanooProtectCreateAppSched';
+import CreateAppSchedForm from '../protection/SusanooProtectCreateAppSched';
 
 type SusanooProtectAppDetailsProps = {
   application: string;

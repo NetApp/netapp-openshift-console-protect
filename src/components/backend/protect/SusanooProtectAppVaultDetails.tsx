@@ -15,7 +15,7 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { CustomizationResource } from 'src/k8s/types';
 import { Button, Modal } from '@patternfly/react-core';
-import SusanooTridentProtectCreateAppVault from './SusanooTridentProtectCreateAppVault';
+import SusanooTridentProtectCreateAppVault from './SusanooProtectCreateAppVault';
 import { TrashIcon } from '@patternfly/react-icons';
 
 type SusanooTridentProtectAppVaultProps = {

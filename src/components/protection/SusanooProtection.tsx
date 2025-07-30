@@ -41,7 +41,7 @@ import {
   Level,
   CardExpandableContent,
 } from '@patternfly/react-core';
-import CreateAppDefForm from '../protect/SusanooProtectCreateAppDef';
+import CreateAppDefForm from './SusanooProtectCreateAppDef';
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 import { RepositoryIcon, TrashIcon } from '@patternfly/react-icons';
 

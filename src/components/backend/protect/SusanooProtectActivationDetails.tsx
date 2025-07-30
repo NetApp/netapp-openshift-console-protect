@@ -13,31 +13,26 @@ import {
   useK8sModel,
   k8sDelete,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { 
-  CustomizationResource 
-} from 'src/k8s/types';
+import { CustomizationResource } from 'src/k8s/types';
 import { 
   Button, 
-  // Dropdown, 
-  // DropdownItem, 
-  // DropdownList, 
-  // MenuToggle, 
-  // MenuToggleElement, 
   Modal 
 } from '@patternfly/react-core';
 import { TrashIcon } from '@patternfly/react-icons';
-import SusanooTridentProtectHelmForm from './SusanooTridentProtectCreateHelm';
+import SusanooProtectCreateActivationKey from './SusanooProtectCreateActivationKey';
+import { jwtDecode }  from 'jwt-decode';
 
-type SusanooTridentProtectHelmProps = {
+type SusanooTridentProtectActivationProps = {
   application: string;
 };
 
-const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ application }) => {
+const SusanooTridentProtectActivation: React.FC<SusanooTridentProtectActivationProps> = ({ application }) => {
   
     const columns: TableColumn<CustomizationResource>[] = [
       { title: 'Name', id: 'name' },
-      { title: 'URL', id: 'url' },
+      { title: 'Namespace', id: 'namespace' },
       { title: 'Created at', id: 'creationTimestamp'},
+      { title: 'Expiration', id: 'expiration' },
       { title: '', id: 'actions' },
     ];
   
@@ -45,15 +40,16 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
 
         const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
         const [resourceToDelete, setResourceToDelete] = React.useState<CustomizationResource | null>(null);
+
         const [k8sModel] = useK8sModel(getGroupVersionKindForResource(obj));
         
         const handleDelete = async () => {
           if (resourceToDelete) {
             try {
               await k8sDelete({ model: k8sModel, resource: resourceToDelete });
-              console.log('Trident Protect Helm deleted successfully');
+              console.log('Trident Protect Activation deleted successfully');
             } catch (err) {
-              console.error('Failed to delete Trident Protect Helm:', err);
+              console.error('Failed to delete Trident Protect Activation:', err);
             } finally {
               setIsDeleteModalOpen(false);
               setResourceToDelete(null);
@@ -66,6 +62,22 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
           setIsDeleteModalOpen(true);
         };
 
+        // Extract and decode JWT expiration
+        let expString = '';
+        try {
+          const encoded = obj.data?.activationKey;
+          if (encoded) {
+            const decoded = atob(encoded);
+            const jwt: any = jwtDecode(decoded);
+            if (jwt.exp) {
+              const date = new Date(jwt.exp * 1000);
+              expString = date.toLocaleString();
+            }
+          }
+        } catch {
+          expString = '';
+        }
+
         return (
           <>
             <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
@@ -76,12 +88,15 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
               />
             </TableData>
             <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs}>
-                {obj.spec?.connectionConfig?.url}
+              {obj.metadata?.namespace}
             </TableData>
             <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs}>
               {obj.metadata?.creationTimestamp}
             </TableData>
-            <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
+            <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs}>
+              {expString}
+            </TableData>
+            <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
               <Button
                 variant="plain"
                 aria-label="Delete"
@@ -91,25 +106,20 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
             </TableData>
 
             <Modal
-              aria-label="Confirm Helm Delete"
               variant="small"
               title="Confirm Delete"
               isOpen={isDeleteModalOpen}
               onClose={() => setIsDeleteModalOpen(false)}
               actions={[
-                <Button 
-                  aria-label='confirm delete button'
-                  key="confirm" variant="danger" onClick={handleDelete}>
+                <Button key="confirm" variant="danger" onClick={handleDelete}>
                   Delete
                 </Button>,
-                <Button 
-                  aria-label='cancel delete button'
-                  key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
+                <Button key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
                   Cancel
                 </Button>
               ]}
             >
-              Are you sure you want to delete this Trident Protect Helm?
+              Are you sure you want to delete this Trident Protect Activation?
             </Modal>
           </>
         );
@@ -130,7 +140,7 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
     }: SusanooTableProps) => {
         return (
             <VirtualizedTable<K8sResourceCommon>
-              aria-label='Trident Protect Helm'
+              aria-label='Trident backendconfig'
               data={data}
               unfilteredData={unfilteredData}
               loaded={loaded}
@@ -142,9 +152,8 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
     };
 
     const resources = {
-      group: 'helm.openshift.io',
-      version: 'v1beta1',
-      kind: 'ProjectHelmChartRepository',
+      version: 'v1',
+      kind: 'Secret',
     };
   
     const [data, loaded, error] = useK8sWatchResource<CustomizationResource[]>({
@@ -153,32 +162,31 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
       namespaced: true,
     });
     
-    const isHelmPresent = data.some((item) => item.spec?.name === 'trident-protect');
     const [isOpen, setIsOpen] = React.useState(false);
   
     return (
       <>
-        <ListPageHeader 
-          aria-label="Trident Protect Helm"
-          title="Trident Protect Helm">
-          <Button
-            aria-label="create helm" 
+        <ListPageHeader title="Trident Protect EAP Activation">
+          <Button 
             variant="primary"
             onClick={() => {setIsOpen(true);}}
-            isDisabled={isHelmPresent}
           >
             Create
           </Button>
         </ListPageHeader>
         <ListPageBody>
           <CustomizationTable 
-            data={data.filter((item) => item.spec?.name === 'trident-protect')}
+            data={data.filter(
+              (item) =>
+                item.metadata?.name?.includes('eap-activation-key') &&
+                item.metadata?.namespace === 'trident-protect'
+            )}
             unfilteredData={data}
             loaded={loaded}
             error={error}
           />
         </ListPageBody>
-        <SusanooTridentProtectHelmForm 
+        <SusanooProtectCreateActivationKey 
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
         />
@@ -186,10 +194,10 @@ const SusanooTridentProtectHelm: React.FC<SusanooTridentProtectHelmProps> = ({ a
     );
 };
 
-const SusanooTridentProtectHelmDetails: React.FC<SusanooTridentProtectHelmProps> = ({ application }) => {
+const SusanooTridentProtectActivationDetails: React.FC<SusanooTridentProtectActivationProps> = ({ application }) => {
     return (
-        <SusanooTridentProtectHelm application={application} />
+        <SusanooTridentProtectActivation application={application} />
     );
 }
 
-export default SusanooTridentProtectHelmDetails;
+export default SusanooTridentProtectActivationDetails;

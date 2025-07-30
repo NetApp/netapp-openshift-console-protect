@@ -49,12 +49,12 @@ import {
 import { 
   useHistory 
 } from 'react-router';
-import SusanooPluginAbout from '../SusanooPluginAbout';
+import SusanooPluginAbout from '../SusanooProtectPluginAbout';
 import NetAppLogo from '../../assets/images/NA_logo_white_rgb.png';
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
-import SusanooTridentProtectActivationDetails from './protect/SusanooTridentProtectActivationDetails';
-import SusanooTridentProtectHelmDetails from './protect/SusanooTridentProtectHelmDetails';
-import SusanooTridentProtectAppVaultDetails from './protect/SusanooTridentProtectAppVaultDetails';
+import SusanooTridentProtectActivationDetails from './protect/SusanooProtectActivationDetails';
+import SusanooTridentProtectHelmDetails from './protect/SusanooProtectHelmDetails';
+import SusanooTridentProtectAppVaultDetails from './protect/SusanooProtectAppVaultDetails';
 
 // Defining generic table props
 type SusanooTableProps = {

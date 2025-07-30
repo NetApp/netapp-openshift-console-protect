@@ -15,8 +15,8 @@ import {
 import { useHistory } from 'react-router-dom';
 import { CustomizationResource } from '../../k8s/types';
 import { Button, Label, Tooltip } from '@patternfly/react-core';
-import CreateAppDefForm from './SusanooProtectCreateAppDef';
-import CreateAppSchedForm from './SusanooProtectCreateAppSched';
+import CreateAppDefForm from '../protection/SusanooProtectCreateAppDef';
+import CreateAppSchedForm from '../protection/SusanooProtectCreateAppSched';
 
 
 // Defining generic table props

@@ -11,13 +11,16 @@ import {
   VirtualizedTable,
   ListPageHeader,
   ListPageBody,
+  useK8sModel,
+  k8sDelete,
 } from '@openshift-console/dynamic-plugin-sdk';
 import { useLocation } from 'react-router';
 import { CustomizationResource } from 'src/k8s/types';
-import { Button, Label } from '@patternfly/react-core';
-import CreateAppSchedForm from './SusanooProtectCreateAppSched';
-import CreateSnapshotForm from './SusanooProtectCreateSnapshot';
-import CreateBackupForm from './SusanooProtectCreateBackup';
+import { Button, Label, Modal } from '@patternfly/react-core';
+import { TrashIcon } from '@patternfly/react-icons';
+import CreateAppSchedForm from '../src/components/protection/SusanooProtectCreateAppSched';
+import CreateSnapshotForm from '../src/components/protection/SusanooProtectCreateSnapshot';
+import CreateBackupForm from '../src/components/protection/SusanooProtectCreateBackup';
 
 type SusanooProtectDetailsProps = {
     application: string;
@@ -71,14 +74,38 @@ const SusanooProtectDetails: React.FC<SusanooProtectDetailsProps> = ({ applicati
             return enabled ? 'green' : 'red';
           };
       
-          const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
-        
-            const groupVersionKind = getGroupVersionKindForResource(obj)
+          const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs }) => {
+            // Add state for modal and resource to delete
+            const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+            const [resourceToDelete, setResourceToDelete] = React.useState<CustomizationResource | null>(null);
+
+            // Get k8sModel for this resource
+            const [k8sModel] = useK8sModel(getGroupVersionKindForResource(obj));
+
+            const handleDelete = async () => {
+              if (resourceToDelete) {
+                try {
+                  await k8sDelete({ model: k8sModel, resource: resourceToDelete });
+                  console.log('Schedule deleted successfully');
+                } catch (err) {
+                  console.error('Failed to delete Schedule:', err);
+                } finally {
+                  setIsDeleteModalOpen(false);
+                  setResourceToDelete(null);
+                }
+              }
+            };
+
+            const confirmDelete = (resource: CustomizationResource) => {
+              setResourceToDelete(resource);
+              setIsDeleteModalOpen(true);
+            };
+
             return (
               <>
                 <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
                   <ResourceLink 
-                    groupVersionKind={groupVersionKind}
+                    groupVersionKind={getGroupVersionKindForResource(obj)}
                     name={obj.metadata?.name}
                     namespace={obj.metadata?.namespace}
                   />
@@ -100,6 +127,33 @@ const SusanooProtectDetails: React.FC<SusanooProtectDetailsProps> = ({ applicati
                 <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs}>
                   {obj.metadata?.creationTimestamp}
                 </TableData>
+                {/* New Delete Button Column */}
+                <TableData id="actions" activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
+                  <Button
+                    variant="plain"
+                    aria-label="Delete"
+                    icon={<TrashIcon />}
+                    title="Delete"
+                    onClick={() => confirmDelete(obj)}
+                  />
+                </TableData>
+                {/* Modal for confirming deletion */}
+                <Modal
+                  variant="small"
+                  title="Confirm Delete"
+                  isOpen={isDeleteModalOpen}
+                  onClose={() => setIsDeleteModalOpen(false)}
+                  actions={[
+                    <Button key="confirm" variant="danger" onClick={handleDelete}>
+                      Delete
+                    </Button>,
+                    <Button key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
+                      Cancel
+                    </Button>
+                  ]}
+                >
+                  Are you sure you want to delete this Protection Schedule?
+                </Modal>
               </>
             );
           };
