@@ -86,16 +86,6 @@
       "exact": true,
       "path": ["/console-protect-details"],
       "component": { 
-        "$codeRef": "ConsoleProtectApplicationDetails" 
-      }
-    }
-  },
-  {
-    "type": "console.page/route",
-    "properties": {
-      "exact": true,
-      "path": ["/console-protect-details"],
-      "component": { 
         "$codeRef": "ConsoleProtectionDetails" 
       }
     }

@@ -108,7 +108,6 @@
       "ConsoleProtect": "./components/protection/SusanooProtection",
       "ConsoleProtectBackend": "./components/backend/SusanooBackendSetup",
       "ConsoleProtectObjectCreate": "./components/SusanooObjectCreate",
-      "ConsoleProtectApplicationDetails": "./components/protect/SusanooProtectApplicationDetails",
       "ConsoleProtectionDetails": "./components/protection/SusanooProtectionDetails"
     },
     "dependencies": {
