@@ -27,6 +27,8 @@ import {
   Modal,
   Stack,
   StackItem,
+  Switch,
+  TextInput,
   Tooltip, 
 } from '@patternfly/react-core';
 import { CopyIcon, PencilAltIcon, RedoIcon, TrashIcon } from '@patternfly/react-icons';
@@ -781,6 +783,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
           const [isInPlaceRestoreModalOpen, setIsInPlaceRestoreModalOpen] = React.useState(false);
           const [isCloneModalOpen, setIsCloneModalOpen] = React.useState(false);
           const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+          const [cloneNamespace, setCloneNamespace] = React.useState('');
           
           return (
             <>
@@ -854,7 +857,15 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                 ]}
               >
                 Are you sure you want to do an in-place restore with this Trident Protect Snapshot?
-              </Modal>   
+                <br />
+                <br />
+                <Switch
+                  id="backup-before-restore-switch"
+                  label="Backup Application before in-place restore"
+                  isChecked={false}
+                  onChange={() => {/* TODO: handle switch state if needed */}}
+                />
+              </Modal>
               <Modal
                 variant="small"
                 title="Confirm Clone"
@@ -869,8 +880,17 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                   </Button>
                 ]}
               >
-                Are you sure you want to do an in-place restore with this Trident Protect Snapshot?
-              </Modal>              
+                Select a namespace to clone the backup to:
+                <br />
+                <br />
+                <TextInput
+                  id="clone-namespace-input"
+                  value={cloneNamespace || ''}
+                  onChange={(_event, val) => setCloneNamespace(val)}
+                  placeholder="Namespace"
+                  aria-label="Namespace"
+                />
+              </Modal>          
               <Modal
                 variant="small"
                 title="Confirm Delete"
@@ -992,6 +1012,10 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
         const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
        
           const groupVersionKind = getGroupVersionKindForResource(obj)
+          const [isInPlaceRestoreModalOpen, setIsInPlaceRestoreModalOpen] = React.useState(false);
+          const [isCloneModalOpen, setIsCloneModalOpen] = React.useState(false);
+          const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+          const [cloneNamespace, setCloneNamespace] = React.useState('');
 
           return (
             <>
@@ -1024,7 +1048,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                   icon={<RedoIcon />}
                   title="In-Place Restore"
                   onClick={() => {
-                    // TODO: implement restore logic
+                    setIsInPlaceRestoreModalOpen(true);
                   }}
                 />
                 <Button
@@ -1033,19 +1057,82 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                   icon={<CopyIcon />}
                   title="Clone"
                   onClick={() => {
-                    // TODO: implement restore logic
+                    setIsCloneModalOpen(true);
                   }}
-                />                
+                />
                 <Button
                   variant="plain"
                   aria-label="Delete"
                   icon={<TrashIcon />}
                   title="Delete"
-                  onClick={() => {
-                    // TODO: implement delete logic
-                  }}
+                  onClick={() => setIsDeleteModalOpen(true)}
                 />
               </TableData>
+              <Modal
+                variant="small"
+                title="Confirm in-Place Restore"
+                isOpen={isInPlaceRestoreModalOpen}
+                onClose={() => setIsInPlaceRestoreModalOpen(false)}
+                actions={[
+                  <Button key="confirm" variant="danger" onClick={() => setIsInPlaceRestoreModalOpen(false)}>
+                    Restore
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={() => setIsInPlaceRestoreModalOpen(false)}>
+                    Cancel
+                  </Button>
+                ]}
+              >
+                Are you sure you want to do an in-place restore with this Trident Protect Snapshot?
+                <br />
+                <br />
+                <Switch
+                  id="backup-before-restore-switch"
+                  label="Backup Application before in-place restore"
+                  isChecked={false}
+                  onChange={() => {/* TODO: handle switch state if needed */}}
+                />
+              </Modal>
+              <Modal
+                variant="small"
+                title="Confirm Clone"
+                isOpen={isCloneModalOpen}
+                onClose={() => setIsCloneModalOpen(false)}
+                actions={[
+                  <Button key="confirm" variant="danger" onClick={() => setIsCloneModalOpen(false)}>
+                    Clone
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={() => setIsCloneModalOpen(false)}>
+                    Cancel
+                  </Button>
+                ]}
+              >
+                Select a namespace to clone the backup to:
+                <br />
+                <br />
+                <TextInput
+                  id="clone-namespace-input"
+                  value={cloneNamespace || ''}
+                  onChange={(_event, val) => setCloneNamespace(val)}
+                  placeholder="Namespace"
+                  aria-label="Namespace"
+                />
+              </Modal>          
+              <Modal
+                variant="small"
+                title="Confirm Delete"
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                actions={[
+                  <Button key="confirm" variant="danger" onClick={() => setIsDeleteModalOpen(false)}>
+                    Delete
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
+                    Cancel
+                  </Button>
+                ]}
+              >
+                Are you sure you want to delete this Trident Protect Schedule?
+              </Modal>
             </>
           );
         };
