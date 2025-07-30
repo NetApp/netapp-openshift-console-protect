@@ -271,7 +271,7 @@ const SusanooProtection = () => {
               </Label>
             </Tooltip>
           </TableData>
-          <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className="pf-u-text-align-center">
+          <TableData id='' activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
             <Button
               variant="plain"
               aria-label="More details"

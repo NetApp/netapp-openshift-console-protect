@@ -135,7 +135,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
               <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs}>
                 {obj.metadata.creationTimestamp}
               </TableData>
-              <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs}>
+              <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
                 <Button
                   variant="plain"
                   aria-label="Edit"
@@ -639,7 +639,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                 <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs}>
                   {obj.metadata?.creationTimestamp}
                 </TableData>
-                <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs}>
+                <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
                   <Button
                     variant="plain"
                     aria-label="Edit"
@@ -792,7 +792,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                     </React.Fragment>
                   ))}
               </TableData> 
-              <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} >
+              <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
                 <Button
                   variant="plain"
                   aria-label="In-Place Restore"
@@ -951,7 +951,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
               <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs}>
                 {obj.status?.completionTimestamp}
               </TableData>
-              <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} >
+              <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
                 <Button
                   variant="plain"
                   aria-label="In-Place Restore"
