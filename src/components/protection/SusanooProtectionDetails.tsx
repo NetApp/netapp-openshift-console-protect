@@ -24,6 +24,7 @@ import {
   Label,
   LabelGroup,
   Level,
+  Modal,
   Stack,
   StackItem,
   Tooltip, 
@@ -611,7 +612,9 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
           };
       
           const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
-        
+            
+            const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+
             const groupVersionKind = getGroupVersionKindForResource(obj)
             return (
               <>
@@ -654,11 +657,25 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                     aria-label="Delete"
                     icon={<TrashIcon />}
                     title="Delete"
-                    onClick={() => {
-                      // TODO: implement delete logic
-                    }}
+                    onClick={() => setIsDeleteModalOpen(true)}
                   />
                 </TableData>
+                <Modal
+                  variant="small"
+                  title="Confirm Delete"
+                  isOpen={isDeleteModalOpen}
+                  onClose={() => setIsDeleteModalOpen(false)}
+                  actions={[
+                    <Button key="confirm" variant="danger" onClick={() => setIsDeleteModalOpen(false)}>
+                      Delete
+                    </Button>,
+                    <Button key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
+                      Cancel
+                    </Button>
+                  ]}
+                >
+                  Are you sure you want to delete this Trident Protect Schedule?
+                  </Modal>
               </>
             );
           };
@@ -761,7 +778,10 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
         const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
           
           const groupVersionKind = getGroupVersionKindForResource(obj)
-
+          const [isInPlaceRestoreModalOpen, setIsInPlaceRestoreModalOpen] = React.useState(false);
+          const [isCloneModalOpen, setIsCloneModalOpen] = React.useState(false);
+          const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+          
           return (
             <>
               <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs} >
@@ -799,7 +819,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                   icon={<RedoIcon />}
                   title="In-Place Restore"
                   onClick={() => {
-                    // TODO: implement restore logic
+                    setIsInPlaceRestoreModalOpen(true);
                   }}
                 />
                 <Button
@@ -808,19 +828,65 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                   icon={<CopyIcon />}
                   title="Clone"
                   onClick={() => {
-                    // TODO: implement restore logic
+                    setIsCloneModalOpen(true);
                   }}
-                />      
+                />
                 <Button
                   variant="plain"
                   aria-label="Delete"
                   icon={<TrashIcon />}
                   title="Delete"
-                  onClick={() => {
-                    // TODO: implement delete logic
-                  }}
+                  onClick={() => setIsDeleteModalOpen(true)}
                 />
               </TableData>
+              <Modal
+                variant="small"
+                title="Confirm in-Place Restore"
+                isOpen={isInPlaceRestoreModalOpen}
+                onClose={() => setIsInPlaceRestoreModalOpen(false)}
+                actions={[
+                  <Button key="confirm" variant="danger" onClick={() => setIsInPlaceRestoreModalOpen(false)}>
+                    Restore
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={() => setIsInPlaceRestoreModalOpen(false)}>
+                    Cancel
+                  </Button>
+                ]}
+              >
+                Are you sure you want to do an in-place restore with this Trident Protect Snapshot?
+              </Modal>   
+              <Modal
+                variant="small"
+                title="Confirm Clone"
+                isOpen={isCloneModalOpen}
+                onClose={() => setIsCloneModalOpen(false)}
+                actions={[
+                  <Button key="confirm" variant="danger" onClick={() => setIsCloneModalOpen(false)}>
+                    Clone
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={() => setIsCloneModalOpen(false)}>
+                    Cancel
+                  </Button>
+                ]}
+              >
+                Are you sure you want to do an in-place restore with this Trident Protect Snapshot?
+              </Modal>              
+              <Modal
+                variant="small"
+                title="Confirm Delete"
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                actions={[
+                  <Button key="confirm" variant="danger" onClick={() => setIsDeleteModalOpen(false)}>
+                    Delete
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={() => setIsDeleteModalOpen(false)}>
+                    Cancel
+                  </Button>
+                ]}
+              >
+                Are you sure you want to delete this Trident Protect Schedule?
+              </Modal>
             </>
           );
         };
