@@ -43,7 +43,7 @@ import {
 } from '@patternfly/react-core';
 import CreateAppDefForm from './SusanooProtectCreateAppDef';
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
-import { RepositoryIcon, TrashIcon } from '@patternfly/react-icons';
+import { FolderOpenIcon, PencilAltIcon, TrashIcon } from '@patternfly/react-icons';
 
 type SusanooProtectionTableProps = {
   data: CustomizationResource[];
@@ -276,13 +276,20 @@ const SusanooProtection = () => {
               variant="plain"
               aria-label="More details"
               title="More details"
-              icon={<RepositoryIcon />}
+              icon={<FolderOpenIcon />}
               onClick={() => {
                 history.push({
                   pathname: '/console-protect-details',
                   state: { application: obj.metadata.name, namespaces: namespaces },
                 });
               }}
+            />
+            <Button
+              variant="plain"
+              aria-label="Edit"
+              title="Edit"
+              icon={<PencilAltIcon />}
+              isDisabled
             />
             <Button
               variant="plain"

@@ -28,7 +28,7 @@ import {
   StackItem,
   Tooltip, 
 } from '@patternfly/react-core';
-import { OutlinedWindowRestoreIcon, TrashIcon } from '@patternfly/react-icons';
+import { CopyIcon, PencilAltIcon, RedoIcon, TrashIcon } from '@patternfly/react-icons';
 import CreateAppSchedForm from './SusanooProtectCreateAppSched';
 import CreateSnapshotForm from './SusanooProtectCreateSnapshot';
 import CreateBackupForm from './SusanooProtectCreateBackup';
@@ -73,6 +73,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
           { title: 'Protection State', id: 'state' },
           { title: 'Included Namespaces', id: 'includes' },
           { title: 'Created', id: 'metadata' },
+          { title: '', id: 'actions'}
         ];
       
         const getStateLabelColor = (phase?: string): 'red' | 'orange' | 'green' | 'grey' => {
@@ -133,6 +134,15 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
               </TableData>
               <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs}>
                 {obj.metadata.creationTimestamp}
+              </TableData>
+              <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs}>
+                <Button
+                  variant="plain"
+                  aria-label="Edit"
+                  title="Edit"
+                  icon={<PencilAltIcon />}
+                  isDisabled
+                />
               </TableData>
             </>
           );
@@ -593,6 +603,7 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
             { title: 'AppVault', id: 'appvault', },
             { title: 'Enabled', id: 'enabled', },
             { title: 'Created at', id: 'metadata.creationTimestamp', },
+            { title: '', id: 'actions' },
           ];
         
           const getEnableLabelColor = (enabled?: boolean): 'red' | 'green' => {
@@ -631,9 +642,9 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                 <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs}>
                   <Button
                     variant="plain"
-                    aria-label="Restore"
-                    icon={<OutlinedWindowRestoreIcon />}
-                    title="Restore"
+                    aria-label="Edit"
+                    title="Edit"
+                    icon={<PencilAltIcon />}
                     onClick={() => {
                       // TODO: implement restore logic
                     }}
@@ -784,13 +795,22 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
               <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} >
                 <Button
                   variant="plain"
-                  aria-label="Restore"
-                  icon={<OutlinedWindowRestoreIcon />}
-                  title="Restore"
+                  aria-label="In-Place Restore"
+                  icon={<RedoIcon />}
+                  title="In-Place Restore"
                   onClick={() => {
                     // TODO: implement restore logic
                   }}
                 />
+                <Button
+                  variant="plain"
+                  aria-label="Clone"
+                  icon={<CopyIcon />}
+                  title="Clone"
+                  onClick={() => {
+                    // TODO: implement restore logic
+                  }}
+                />      
                 <Button
                   variant="plain"
                   aria-label="Delete"
@@ -934,13 +954,22 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
               <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} >
                 <Button
                   variant="plain"
-                  aria-label="Restore"
-                  icon={<OutlinedWindowRestoreIcon />}
-                  title="Restore"
+                  aria-label="In-Place Restore"
+                  icon={<RedoIcon />}
+                  title="In-Place Restore"
                   onClick={() => {
                     // TODO: implement restore logic
                   }}
                 />
+                <Button
+                  variant="plain"
+                  aria-label="Clone"
+                  icon={<CopyIcon />}
+                  title="Clone"
+                  onClick={() => {
+                    // TODO: implement restore logic
+                  }}
+                />                
                 <Button
                   variant="plain"
                   aria-label="Delete"
