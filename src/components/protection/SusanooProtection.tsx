@@ -41,7 +41,7 @@ import {
   Level,
   CardExpandableContent,
 } from '@patternfly/react-core';
-import CreateAppDefForm from './SusanooProtectCreateAppDef';
+import SusanooProtectionWizard from './SusanooProtectionWizard';
 import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
 import { FolderOpenIcon, PencilAltIcon, TrashIcon } from '@patternfly/react-icons';
 
@@ -90,17 +90,17 @@ const SusanooProtectStatistics = () => {
     namespaced: false,
   });
 
-  const mirrorsResources = {
-    group: 'protect.trident.netapp.io',
-    version: 'v1',
-    kind: 'AppMirrorRelationship',
-  };
+  // const mirrorsResources = {
+  //   group: 'protect.trident.netapp.io',
+  //   version: 'v1',
+  //   kind: 'AppMirrorRelationship',
+  // };
   
-  const [mirrors] = useK8sWatchResource<CustomizationResource[]>({
-    groupVersionKind: mirrorsResources,
-    isList: true,
-    namespaced: false,
-  });
+  // const [mirrors] = useK8sWatchResource<CustomizationResource[]>({
+  //   groupVersionKind: mirrorsResources,
+  //   isList: true,
+  //   namespaced: false,
+  // });
 
   const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
   const handleHelpModalToggle = () => {
@@ -152,11 +152,11 @@ const SusanooProtectStatistics = () => {
                       {backups.length || 0}
                       <span>Backups</span>
                     </Stack>
-                    <Divider orientation={{ default: 'vertical' }} />
-                    <Stack> 
+                    {/* <Divider orientation={{ default: 'vertical' }} /> */}
+                    {/* <Stack> 
                       {mirrors.length || 0}
                       <span>Mirrors</span>
-                    </Stack>
+                    </Stack> */}
                   </Flex>
               </CardBody>
             </Card>
@@ -179,7 +179,7 @@ const SusanooProtectStatistics = () => {
   );
 };
 
-const SusanooProtection = () => {
+const SusanooProtect = () => {
   const history = useHistory();
 
   const SusanooTable: React.FC<SusanooProtectionTableProps & { value: string }> = ({ data, unfilteredData, loaded, error, value }) => {
@@ -189,7 +189,7 @@ const SusanooProtection = () => {
       { title: 'Namespaces', id: 'includes' },
       { title: 'Workloads', id: 'workloads' },
       { title: 'Protection State', id: 'state' },
-      { title: '', id: 'actions' },
+      { title: 'Actions', id: 'actions' },
     ];
 
     const getStateLabelColor = (phase?: string): 'red' | 'orange' | 'green' | 'grey' => {
@@ -248,30 +248,30 @@ const SusanooProtection = () => {
 
       return (
         <>
-          <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
-            <ResourceLink groupVersionKind={groupVersionKind} name={obj.metadata?.name} namespace={obj.metadata?.namespace} />
+          <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs} >
+            <ResourceLink groupVersionKind={groupVersionKind} name={obj.metadata?.name} namespace={obj.metadata?.namespace} linkTo />
           </TableData>
-          <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs}>
+          <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs} >
           <Stack>
           {namespaces.map((namespace, index) => (
             <StackItem key={`${namespace}-${index}`}><Label color="blue">{namespace}</Label></StackItem>
           ))}
         </Stack>
           </TableData>
-          <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs}>
+          <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs} >
               <Stack>
                 <StackItem><Label color="cyan">Pods: {pods.length}</Label></StackItem>
                 <StackItem><Label color="purple">VMs: {vms.length}</Label></StackItem>
               </Stack>
           </TableData>          
-          <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs}>
+          <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs} >
             <Tooltip content={getProtectionStateTooltip(obj.status?.protectionState)}>
               <Label color={getStateLabelColor(obj.status?.protectionState)}>
                 {obj.status?.protectionState || 'Never ran'}
               </Label>
             </Tooltip>
           </TableData>
-          <TableData id='' activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
+          <TableData id='' activeColumnIDs={activeColumnIDs} >
             <Button
               variant="plain"
               aria-label="More details"
@@ -349,15 +349,16 @@ const SusanooProtection = () => {
   });
 
   const [data, filteredData, onFilterChange] = useListPageFilter(application, filters);
-  const [isAppModalOpen, setIsAppModalOpen] = React.useState(false);
+  const [isWizardModalOpen, setIsWizardModalOpen] = React.useState(false);
 
   const [isAppRefCardExpanded, setIsAppRefCardExpanded] = React.useState(false);
   const onAppRefCardExpand = () => {
     setIsAppRefCardExpanded(!isAppRefCardExpanded);
   };
-  const appRefAction = (
-    <Button variant='primary' onClick={() => setIsAppModalOpen(true)}>Create</Button>
+  const appWizardAction = (
+    <Button variant='primary' onClick={() => setIsWizardModalOpen(true)}>Helper</Button>
   )
+
 
 
   return (
@@ -368,7 +369,7 @@ const SusanooProtection = () => {
         <Grid hasGutter>
           <Card ouiaId='susanoo-trident-protect-application' isExpanded={isAppRefCardExpanded}>
             <CardHeader
-              actions={{ actions: appRefAction }}
+              actions={{ actions: appWizardAction }}
               onExpand={onAppRefCardExpand}
               toggleButtonProps={{
                 'aria-label': 'Toggle Card',
@@ -419,7 +420,8 @@ const SusanooProtection = () => {
           value={backup} 
         />
       </ListPageBody> */}
-      {<CreateAppDefForm isOpen={isAppModalOpen} onClose={() => setIsAppModalOpen(false)} />}
+      <SusanooProtectionWizard isOpen={isWizardModalOpen} onClose={() => setIsWizardModalOpen(false)} />
+     
     </>
   );
 };
@@ -473,7 +475,7 @@ const SusanooBasicProtect: React.FC = () => {
 
 };
 
-const SusanooWorkloadDetails = () => {
+const SusanooProtectPage = () => {
 
   const { isValidKey, isLoading } = useActivationKeyCheck();
 
@@ -537,10 +539,10 @@ const SusanooWorkloadDetails = () => {
       return (
         <>
           <SusanooProtectStatistics />
-          <SusanooProtection />
+          <SusanooProtect />
         </>
       );
   };
 
 };
-export default SusanooWorkloadDetails;
+export default SusanooProtectPage;

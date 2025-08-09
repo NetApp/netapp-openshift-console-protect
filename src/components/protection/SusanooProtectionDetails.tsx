@@ -769,11 +769,9 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
     
         const columns: TableColumn<CustomizationResource>[] = [
           { title: 'Name', id: 'name', },
-          { title: 'Application', id: 'application', },
-          { title: 'Vault', id: 'appvault', },
+          { title: 'Namespace', id: 'namespace', },
           { title: 'Created', id: 'created', },
           { title: 'State', id: 'state', },
-          { title: 'Snapshots', id: 'snapshots', },
           { title: '', id: 'actions', },
         ];
     
@@ -784,6 +782,19 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
           const [isCloneModalOpen, setIsCloneModalOpen] = React.useState(false);
           const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
           const [cloneNamespace, setCloneNamespace] = React.useState('');
+
+          const getStatusLabelColor = (phase?: string): 'green' | 'orange' | 'red' | 'grey' => {
+            switch (phase) {
+                case 'Completed':
+                    return 'green';
+                case 'Error':
+                    return 'orange';
+                case 'Failed':
+                    return 'red';
+                default:
+                    return 'grey';
+            }
+          };
           
           return (
             <>
@@ -795,27 +806,17 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
                 />
               </TableData> 
               <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs} >
-                {obj.spec?.applicationRef}
+                {obj.metadata?.namespace}
               </TableData> 
               <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs} >
-                {obj.spec?.appVaultRef}
-              </TableData>   
-              <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs} >
                 {obj.metadata?.creationTimestamp} 
               </TableData>            
-              <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs}>
-                {obj.status?.state}
+              <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs}>
+                <Label color={getStatusLabelColor(obj.status?.state)} isCompact>
+                  {obj.status?.state || 'Failed'}
+                </Label>
               </TableData>
-              <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs} >
-                  {obj.status?.volumeSnapshots?.map((snapshot) => (
-                    <React.Fragment key={snapshot.name}>
-                      <Label color='blue' isCompact>
-                      {snapshot.name}
-                      </Label>
-                    </React.Fragment>
-                  ))}
-              </TableData> 
-              <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
+              <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
                 <Button
                   variant="plain"
                   aria-label="In-Place Restore"
@@ -1002,10 +1003,8 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
         const columns: TableColumn<CustomizationResource>[] = [
           { title: 'Name', id: 'name', },
           { title: 'Namespace', id: 'namespace', },
-          { title: 'Vault', id: 'vault' },
-          { title: 'State', id: 'state', },
           { title: 'Created', id: 'created', },
-          { title: 'Completed', id: 'completed',},
+          { title: 'State', id: 'state', },
           { title: '', id: 'actions', },
         ];
       
@@ -1029,19 +1028,13 @@ const SusanooProtectionDetails: React.FC<SusanooProtectionDetailsProps> = ({ app
               <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs} >
                 {obj.metadata?.namespace}
               </TableData>
-              <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs} >
-                {obj.spec?.appVaultRef}
+              <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs}>
+                {obj.metadata.creationTimestamp}
               </TableData>
               <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs} >
                 {obj.status?.state}
-              </TableData>             
-              <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs}>
-                {obj.metadata.creationTimestamp}
               </TableData>
-              <TableData id={columns[5].id} activeColumnIDs={activeColumnIDs}>
-                {obj.status?.completionTimestamp}
-              </TableData>
-              <TableData id={columns[6].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
+              <TableData id={columns[4].id} activeColumnIDs={activeColumnIDs} className='pf-v5-c-table__action'>
                 <Button
                   variant="plain"
                   aria-label="In-Place Restore"
