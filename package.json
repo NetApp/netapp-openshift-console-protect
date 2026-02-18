@@ -1,6 +1,6 @@
 {
   "name": "netapp-openshift-console-protect",
-  "version": "25.7.30",
+  "version": "26.2.1",
   "description": "NetApp OpenShift Console Plugin provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
   "private": true,
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "test": "jest '**'",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "podman-build": "yarn clean && podman build -f Dockerfile --platform=linux/amd64 -t ghcr.io/netapp/netapp-openshift-console-protect:$npm_package_version",
+    "podman-build": "yarn clean && podman build -f Dockerfile --platform=linux/amd64 -t ghcr.io/netapp/netapp-openshift-console-protect:$npm_package_version .",
     "podman-push": "podman push ghcr.io/netapp/netapp-openshift-console-protect:$npm_package_version"
   },
   "devDependencies": {
@@ -101,7 +101,7 @@
   },
   "consolePlugin": {
     "name": "netapp-openshift-console-protect",
-    "version": "25.7.30",
+    "version": "26.2.1",
     "displayName": "NetApp Console for Trident Protect",
     "description": "NetApp Console Plug-in for Red Hat OpenShift provides a single pane integration with NetApp Intelligent Data Management solutions for containers and virtual machines",
     "exposedModules": {
@@ -123,7 +123,6 @@
   },
   "dependencies": {
     "@openshift-console/plugin-shared": "^0.0.3",
-    "jwt-decode": "^4.0.0",
     "jwt-encode": "^1.0.1",
     "remark-gfm": "^4.0.0"
   }

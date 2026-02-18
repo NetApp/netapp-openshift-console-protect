@@ -17,11 +17,8 @@ import {
 } from '@openshift-console/dynamic-plugin-sdk';
 import { useHistory } from 'react-router-dom';
 import { CustomizationResource } from '../../k8s/types';
-import { 
-  Label, 
-  Tooltip, 
-  Stack,
-  StackItem,
+import {
+  Label,
   Button,
   Grid,
   Gallery,
@@ -32,17 +29,15 @@ import {
   Flex,
   Divider,
   Modal,
-  TextContent,
   CardHeader,
-  CardFooter,
-  FlexItem,
-  Text,
-  Alert,
   Level,
+  Tooltip,
+  Stack,
+  StackItem,
   CardExpandableContent,
 } from '@patternfly/react-core';
 import SusanooProtectionWizard from './SusanooProtectionWizard';
-import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
+
 import { FolderOpenIcon, PencilAltIcon, TrashIcon } from '@patternfly/react-icons';
 
 type SusanooProtectionTableProps = {
@@ -59,7 +54,7 @@ const SusanooProtectStatistics = () => {
     version: 'v1',
     kind: 'Application',
   };
-  
+
   const [appRef] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: appRefResources,
     isList: true,
@@ -71,7 +66,7 @@ const SusanooProtectStatistics = () => {
     version: 'v1',
     kind: 'Snapshot',
   };
-  
+
   const [snapshots] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: snapshotsResources,
     isList: true,
@@ -83,7 +78,7 @@ const SusanooProtectStatistics = () => {
     version: 'v1',
     kind: 'Backup',
   };
-  
+
   const [backups] = useK8sWatchResource<CustomizationResource[]>({
     groupVersionKind: backupsResources,
     isList: true,
@@ -95,7 +90,7 @@ const SusanooProtectStatistics = () => {
   //   version: 'v1',
   //   kind: 'AppMirrorRelationship',
   // };
-  
+
   // const [mirrors] = useK8sWatchResource<CustomizationResource[]>({
   //   groupVersionKind: mirrorsResources,
   //   isList: true,
@@ -124,7 +119,7 @@ const SusanooProtectStatistics = () => {
         >
           This Protection page provides an application-centric overview of all resources associated with an application across one or multiple namespaces, like pods, virtual machines, storage objects, etc.
           <br /><br />
-          To get started, you can create an Application Reference by clicking the Create button. This will allow you to select the namespace(s) in which your applications have component(s). The traditional example of a two-tier application could have two namespaces: one for the frontend and one for the backend. 
+          To get started, you can create an Application Reference by clicking the Create button. This will allow you to select the namespace(s) in which your applications have component(s). The traditional example of a two-tier application could have two namespaces: one for the frontend and one for the backend.
           <br /> <br />
           Once the Application Reference is created, it will appear in the view with a quick overview of the associated resources and the business continuity status. To configure the protection for the application, you can click on the Actions button to navigate to the details page.
           <br /> <br />
@@ -132,23 +127,23 @@ const SusanooProtectStatistics = () => {
       </ListPageHeader>
       <ListPageBody>
         <Grid>
-          <Gallery hasGutter minWidths={{ default: '430px' }}>            
-            <GalleryItem>                
+          <Gallery hasGutter minWidths={{ default: '430px' }}>
+            <GalleryItem>
               <Card ouiaId='susanoo-trident-protect-stats'>
-              <CardTitle style={{ textAlign: 'center' } as React.CSSProperties} >Protections</CardTitle>
-              <CardBody style={{ textAlign: 'center' } as React.CSSProperties}>
-                <Flex display={{ default: 'inlineFlex' }}>
-                    <Stack> 
+                <CardTitle style={{ textAlign: 'center' } as React.CSSProperties} >Protections</CardTitle>
+                <CardBody style={{ textAlign: 'center' } as React.CSSProperties}>
+                  <Flex display={{ default: 'inlineFlex' }}>
+                    <Stack>
                       {appRef.length || 0}
                       <span>Applications</span>
                     </Stack>
                     <Divider orientation={{ default: 'vertical' }} />
-                    <Stack> 
+                    <Stack>
                       {snapshots.length || 0}
                       <span>Snapshots</span>
                     </Stack>
                     <Divider orientation={{ default: 'vertical' }} />
-                    <Stack> 
+                    <Stack>
                       {backups.length || 0}
                       <span>Backups</span>
                     </Stack>
@@ -158,8 +153,8 @@ const SusanooProtectStatistics = () => {
                       <span>Mirrors</span>
                     </Stack> */}
                   </Flex>
-              </CardBody>
-            </Card>
+                </CardBody>
+              </Card>
             </GalleryItem>
             {/* <GalleryItem>                
             <Card ouiaId='susanoo-trident-protect-statistics'>
@@ -223,7 +218,7 @@ const SusanooProtect = () => {
       const groupVersionKind = getGroupVersionKindForResource(obj);
 
       const namespaces = obj.spec?.includedNamespaces?.map((ns: { namespace: string }) => ns.namespace) || [];
-    
+
       const podResource = {
         groupVersionKind: { group: '', version: 'v1', kind: 'Pod' },
         isList: true,
@@ -252,18 +247,18 @@ const SusanooProtect = () => {
             <ResourceLink groupVersionKind={groupVersionKind} name={obj.metadata?.name} namespace={obj.metadata?.namespace} linkTo />
           </TableData>
           <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs} >
-          <Stack>
-          {namespaces.map((namespace, index) => (
-            <StackItem key={`${namespace}-${index}`}><Label color="blue">{namespace}</Label></StackItem>
-          ))}
-        </Stack>
+            <Stack>
+              {namespaces.map((namespace, index) => (
+                <StackItem key={`${namespace}-${index}`}><Label color="blue">{namespace}</Label></StackItem>
+              ))}
+            </Stack>
           </TableData>
           <TableData id={columns[2].id} activeColumnIDs={activeColumnIDs} >
-              <Stack>
-                <StackItem><Label color="cyan">Pods: {pods.length}</Label></StackItem>
-                <StackItem><Label color="purple">VMs: {vms.length}</Label></StackItem>
-              </Stack>
-          </TableData>          
+            <Stack>
+              <StackItem><Label color="cyan">Pods: {pods.length}</Label></StackItem>
+              <StackItem><Label color="purple">VMs: {vms.length}</Label></StackItem>
+            </Stack>
+          </TableData>
           <TableData id={columns[3].id} activeColumnIDs={activeColumnIDs} >
             <Tooltip content={getProtectionStateTooltip(obj.status?.protectionState)}>
               <Label color={getStateLabelColor(obj.status?.protectionState)}>
@@ -316,23 +311,23 @@ const SusanooProtect = () => {
   };
 
   const filters: RowFilter[] = [
-      {
-        filterGroupName: 'Status',
-        type: 'application-status',
-        reducer: (application: CustomizationResource) => application.status?.protectionState || 'Unknown',
-        filter: (input, application) => {
-          if (input.selected?.length) {
-            return input.selected.includes(application.status?.phase || 'Unknown');
-          }
-          return true;
-        },
-        items: [
-          { id: 'None', title: 'None' },
-          { id: 'Partial', title: 'Partial' },
-          { id: 'Full', title: 'Full' },
-        ],
-      }
-    ];
+    {
+      filterGroupName: 'Status',
+      type: 'application-status',
+      reducer: (application: CustomizationResource) => application.status?.protectionState || 'Unknown',
+      filter: (input, application) => {
+        if (input.selected?.length) {
+          return input.selected.includes(application.status?.phase || 'Unknown');
+        }
+        return true;
+      },
+      items: [
+        { id: 'None', title: 'None' },
+        { id: 'Partial', title: 'Partial' },
+        { id: 'Full', title: 'Full' },
+      ],
+    }
+  ];
 
   const resources = {
     group: 'protect.trident.netapp.io',
@@ -364,7 +359,7 @@ const SusanooProtect = () => {
   return (
     <>
       <ListPageHeader title="Application References">
-      </ListPageHeader>  
+      </ListPageHeader>
       <ListPageBody>
         <Grid hasGutter>
           <Card ouiaId='susanoo-trident-protect-application' isExpanded={isAppRefCardExpanded}>
@@ -393,18 +388,18 @@ const SusanooProtect = () => {
                   rowFilters={filters}
                   onFilterChange={onFilterChange}
                 />
-                <SusanooTable 
-                  data={filteredData} 
-                  unfilteredData={data} 
-                  loaded={loaded} 
-                  error={error} 
-                  value={backup} 
-                />              
+                <SusanooTable
+                  data={filteredData}
+                  unfilteredData={data}
+                  loaded={loaded}
+                  error={error}
+                  value={backup}
+                />
               </CardBody>
             </CardExpandableContent>
           </Card>
         </Grid>
-      </ListPageBody>  
+      </ListPageBody>
       {/* <ListPageBody>
         <ListPageFilter
           data={data}
@@ -421,128 +416,23 @@ const SusanooProtect = () => {
         />
       </ListPageBody> */}
       <SusanooProtectionWizard isOpen={isWizardModalOpen} onClose={() => setIsWizardModalOpen(false)} />
-     
+
     </>
   );
 };
 
-const SusanooBasicProtect: React.FC = () => {
 
-    const quickstartResource = {
-      groupVersionKind: {
-        group: 'console.openshift.io',
-        version: 'v1',
-        kind: 'ConsoleQuickStart',
-      },
-        isList: true,
-    };
-
-    const [quickstart] = useK8sWatchResource<CustomizationResource[]>(quickstartResource);
-    
-    const filteredQuickstarts = quickstart.filter(
-        (qs) => qs.metadata?.name.includes('netapp-trident-protect')
-    );
-
-    return (
-      <> 
-            <Gallery hasGutter>
-                {filteredQuickstarts.map((qs, index) => (
-                    <Card key={index} id={qs.metadata.name}>
-                        <CardHeader>
-                            <CardTitle>{qs.spec.displayName}</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <Text>{qs.spec.description}</Text>
-                        </CardBody>
-                        <CardFooter>
-                            <Flex>
-                                <FlexItem>
-                                    <a href={`/quickstart?keyword=netapp&quickstart=${qs.metadata.name}`}>Tutorial</a>
-                                </FlexItem>
-                                <FlexItem>
-                                    <a href='#'>Deploy</a>
-                                </FlexItem>
-                                <FlexItem>
-                                    <a href='#'>Git Repo</a>
-                                </FlexItem>
-                            </Flex>
-                        </CardFooter>
-                    </Card>
-                ))}
-            </Gallery>
-      </>
-    )
-
-};
 
 const SusanooProtectPage = () => {
 
-  const { isValidKey, isLoading } = useActivationKeyCheck();
 
-  const [isHelpModalOpen, setIsHelpModalOpen] = React.useState(false);
-  const handleHelpModalToggle = () => {
-    setIsHelpModalOpen(!isHelpModalOpen);
-  };
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <span>Loading...</span>
-      </div>
-    );
-  }
-
-  if (!isValidKey) {
-    return (
-      <>
-        <Alert variant="danger" title="NetApp Console Plugin for OpenShift">
-          The Early Access Program activation key is missing or expired. Please contact your NetApp EAP Contact.
-        </Alert>
-        <ListPageHeader title="Protection">
-          <Button
-            variant="primary"
-            onClick={handleHelpModalToggle}
-          >
-            Help
-          </Button>
-          <Modal
-            isOpen={isHelpModalOpen}
-            onClose={handleHelpModalToggle}
-            title="Protection"
-            variant="small"
-          >
-            This Protection page provides an application-centric overview of all resources associated with an application across one or multiple namespaces, like pods, virtual machines, storage objects, etc.
-            <br /><br />
-            To get started, you can create an Application Reference by clicking the Create button. This will allow you to select the namespace(s) in which your applications have component(s). The traditional example of a two-tier application could have two namespaces: one for the frontend and one for the backend. 
-            <br /> <br />
-            Once the Application Reference is created, it will appear in the view with a quick overview of the associated resources and the business continuity status. To configure the protection for the application, you can click on the Actions button to navigate to the details page.
-            <br /> <br />
-          </Modal>
-        </ListPageHeader>
-        <ListPageBody>
-          <Grid hasGutter>
-              <Card>
-                <CardTitle>Trident Protect</CardTitle>
-                <CardBody>
-                  <TextContent>
-                    <p>Trident Protect is the Kubernetes engine for NetApp data protection solution that integrates seamlessly with your Kubernetes environment. It offers features for backup, recovery, and disaster recovery, ensuring the safety and availability of your applications and data using a set of CRDs.</p>
-                    <p>To get started, use one of the below quickstart tutorials to protect your application and its data.</p>
-                  </TextContent>
-                </CardBody>
-              </Card>
-            <SusanooBasicProtect />
-          </Grid>
-        </ListPageBody>
-      </>
-    );
-  } else {  
-      return (
-        <>
-          <SusanooProtectStatistics />
-          <SusanooProtect />
-        </>
-      );
-  };
+  return (
+    <>
+      <SusanooProtectStatistics />
+      <SusanooProtect />
+    </>
+  );
 
 };
 export default SusanooProtectPage;

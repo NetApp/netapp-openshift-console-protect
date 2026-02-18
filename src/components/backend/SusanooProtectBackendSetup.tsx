@@ -13,15 +13,15 @@ import {
   useK8sWatchResource,
   VirtualizedTable,
 } from '@openshift-console/dynamic-plugin-sdk';
-import { 
-  CustomizationResource 
+import {
+  CustomizationResource
 } from '../../k8s/types';
-import { 
+import {
   AboutModal,
-  Button, 
-  Card, 
-  CardBody, 
-  CardTitle, 
+  Button,
+  Card,
+  CardBody,
+  CardTitle,
   // Dropdown,
   // DropdownItem,
   // DropdownList,
@@ -41,18 +41,17 @@ import {
   WizardHeader,
   WizardStep,
 } from '@patternfly/react-core';
-import { 
+import {
   ExternalLinkAltIcon,
   CloudSecurityIcon,
-  TrashIcon, 
+  TrashIcon,
 } from '@patternfly/react-icons';
-import { 
-  useHistory 
+import {
+  useHistory
 } from 'react-router';
 import SusanooPluginAbout from '../SusanooProtectPluginAbout';
 import NetAppLogo from '../../assets/images/NA_logo_white_rgb.png';
-import useActivationKeyCheck from '../../utils/SusanooActivationKeyCheck';
-import SusanooTridentProtectActivationDetails from './protect/SusanooProtectActivationDetails';
+
 import SusanooTridentProtectHelmDetails from './protect/SusanooProtectHelmDetails';
 import SusanooTridentProtectAppVaultDetails from './protect/SusanooProtectAppVaultDetails';
 
@@ -67,16 +66,16 @@ type SusanooTableProps = {
 // Logic to display the Susanoo Console Plugin status
 const SusanooConsolePlugin = () => {
 
-  const SusanooTable: React.FC<SusanooTableProps> = ({ data, unfilteredData, loaded, error}) => {
+  const SusanooTable: React.FC<SusanooTableProps> = ({ data, unfilteredData, loaded, error }) => {
     const columns: TableColumn<K8sResourceCommon>[] = [
       { title: 'Name', id: 'name' },
-      { title: 'Version', id: 'version'},
-      { title: 'Display Name', id: 'displayName' }, 
+      { title: 'Version', id: 'version' },
+      { title: 'Display Name', id: 'displayName' },
       { title: 'Created at', id: 'creationTimestamp' },
       { title: '', id: 'actions' }
     ];
 
-    const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs}) => {
+    const SusanooTableRow: React.FC<RowProps<CustomizationResource>> = ({ obj, activeColumnIDs }) => {
 
       const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
       const [resourceToDelete, setResourceToDelete] = React.useState<CustomizationResource | null>(null);
@@ -100,14 +99,14 @@ const SusanooConsolePlugin = () => {
       const confirmDelete = (resource: CustomizationResource) => {
         setResourceToDelete(resource);
         setIsDeleteModalOpen(true);
-      };      
+      };
 
       const history = useHistory();
 
       return (
         <>
           <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
-            <ResourceLink 
+            <ResourceLink
               groupVersionKind={getGroupVersionKindForResource(obj)}
               name={obj.metadata?.name}
               namespace={obj.metadata?.namespace}
@@ -184,18 +183,18 @@ const SusanooConsolePlugin = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
-  };   
+  };
 
   return (
     <>
       <ListPageHeader title="NetApp OpenShift Console for Protect">
-        <Button 
+        <Button
           variant='primary'
           onClick={handleModalToggle}
         >
           About
         </Button>
-        <AboutModal 
+        <AboutModal
           isOpen={isModalOpen}
           onClose={handleModalToggle}
           brandImageAlt='NetApp, Inc Logo'
@@ -211,7 +210,7 @@ const SusanooConsolePlugin = () => {
         <Card>
           <CardTitle>Plugins</CardTitle>
           <CardBody>
-            <SusanooTable 
+            <SusanooTable
               data={data.filter(item => item.metadata.name === 'netapp-openshift-console-protect')}
               unfilteredData={data}
               loaded={loaded}
@@ -221,7 +220,7 @@ const SusanooConsolePlugin = () => {
         </Card>
       </ListPageBody>
     </>
-  );  
+  );
 };
 
 export const SusanooProtectDeployProgress = () => {
@@ -240,9 +239,9 @@ export const SusanooProtectDeployProgress = () => {
   });
   const activationObj = activationData[0];
 
-  const [ isWizardOpen, setIsWizardOpen ] = React.useState(false);
+  const [isWizardOpen, setIsWizardOpen] = React.useState(false);
   // const [ isActivationOpen, setIsActivationOpen ] = React.useState(false);
-  const {isValidKey, isLoading } = useActivationKeyCheck();
+
 
   const helmResources = {
     group: 'helm.openshift.io',
@@ -270,12 +269,10 @@ export const SusanooProtectDeployProgress = () => {
     namespaced: true,
   });
   const isHelmReleasePresent = helmReleaseData.some((item) => item.metadata?.name === 'trident-protect-controller-manager');
-  
-  const [ selectedResource, setSelectedResource ] = React.useState<{ namespace: string, name: string } | null>(null);
 
-  if (isLoading) {
-    return <div></div>;
-  }
+  const [selectedResource, setSelectedResource] = React.useState<{ namespace: string, name: string } | null>(null);
+
+
 
   // const history = useHistory();
   return (
@@ -295,76 +292,62 @@ export const SusanooProtectDeployProgress = () => {
         <Card>
           <CardTitle>Deployment Status</CardTitle>
           <CardBody>
-            <ProgressStepper 
-              aria-label="Trident Protect Installation Progress" 
+            <ProgressStepper
+              aria-label="Trident Protect Installation Progress"
               isCenterAligned
+            >
+
+              <ProgressStep
+                variant={isHelmRepoPresent ? 'success' : 'pending'}
+                id="protect-1"
+                titleId='protect-1'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="Protect Helm Installation"
+                    headerContent="Trident Protect Helm Charts"
+                    bodyContent={isHelmRepoPresent ? "Trident Protect Helm Charts installed successfully." : "Click Actions to deploy the NetApp supported Helm Charts that manages Trident Protect deployment and maintenance on Red Hat OpenShift."}
+                    triggerRef={stepRef}
+                  />
+                }
               >
-                <ProgressStep
-                  variant={isValidKey ? 'success' : 'warning'}   
-                  id="protect-3"
-                  titleId='protect-3' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Activate EAP"
-                      headerContent="Trident Protect EAP Activation"
-                      bodyContent={isValidKey ? "Trident Protect EAP successfully activated." : "Click Actions to enter the activation key."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  EAP Activation
-                </ProgressStep>                
-                <ProgressStep
-                  variant={isHelmRepoPresent ? 'success' : 'pending'}   
-                  id="protect-1"
-                  titleId='protect-1' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Protect Helm Installation"
-                      headerContent="Trident Protect Helm Charts"
-                      bodyContent={isHelmRepoPresent ? "Trident Protect Helm Charts installed successfully." : "Click Actions to deploy the NetApp supported Helm Charts that manages Trident Protect deployment and maintenance on Red Hat OpenShift."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  Helm Repository
-                </ProgressStep>
-                <ProgressStep
-                  variant={isHelmReleasePresent ? 'success' : 'pending'}  
-                  id="protect-2"
-                  titleId='protect-2' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Protect Helm Installation"
-                      headerContent="Trident Protect Helm Charts"
-                      bodyContent={isHelmReleasePresent ? "Trident Protect Helm Charts installed successfully." : "Click Actions to deploy the NetApp supported Helm Charts that manages Trident Protect deployment and maintenance on Red Hat OpenShift."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  Helm Release
-                </ProgressStep>                                
-                <ProgressStep
-                  icon={<CloudSecurityIcon />} 
-                  id="protect-7"
-                  titleId='protect-7' 
-                  popoverRender={(stepRef) =>
-                    <Popover 
-                      ariad-label="Protect Application Vault"
-                      headerContent="Trident Protect Application Vault"
-                      bodyContent={"Configure a S3 endpoint to offload backups."}
-                      triggerRef={stepRef}
-                    />
-                  }
-                >
-                  Application Vault
-                </ProgressStep>
+                Helm Repository
+              </ProgressStep>
+              <ProgressStep
+                variant={isHelmReleasePresent ? 'success' : 'pending'}
+                id="protect-2"
+                titleId='protect-2'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="Protect Helm Installation"
+                    headerContent="Trident Protect Helm Charts"
+                    bodyContent={isHelmReleasePresent ? "Trident Protect Helm Charts installed successfully." : "Click Actions to deploy the NetApp supported Helm Charts that manages Trident Protect deployment and maintenance on Red Hat OpenShift."}
+                    triggerRef={stepRef}
+                  />
+                }
+              >
+                Helm Release
+              </ProgressStep>
+              <ProgressStep
+                icon={<CloudSecurityIcon />}
+                id="protect-7"
+                titleId='protect-7'
+                popoverRender={(stepRef) =>
+                  <Popover
+                    ariad-label="Protect Application Vault"
+                    headerContent="Trident Protect Application Vault"
+                    bodyContent={"Configure a S3 endpoint to offload backups."}
+                    triggerRef={stepRef}
+                  />
+                }
+              >
+                Application Vault
+              </ProgressStep>
             </ProgressStepper>
           </CardBody>
         </Card>
       </ListPageBody>
       {selectedResource && (
-        <Modal 
+        <Modal
           aria-label='Trident Protect Wizard'
           variant="large"
           isOpen={isWizardOpen}
@@ -391,7 +374,7 @@ export const SusanooProtectDeployProgress = () => {
                 <Text component={TextVariants.p}>NetApp Trident Protect provides advanced application data management capabilities that enhance the functionality and availability of stateful Kubernetes applications backed by NetApp ONTAP storage systems and the NetApp Trident CSI storage provisioner. Trident Protect simplifies the management, protection, and movement of containerized and virtualized workloads across public clouds and on-premises environments. It also offers automation capabilities through its API and CLI.</Text>
                 <Text component={TextVariants.p}>The following steps are required to deploy and configure Trident Protect on Red Hat OpenShift:</Text>
                 <TextList component={TextListVariants.ol}>
-                  <TextListItem>Activate Trident Protect EAP</TextListItem>
+
                   <TextListItem>Add the Helm Chart repository</TextListItem>
                   <TextListItem>Install the Trident Protect CRDs</TextListItem>
                   <TextListItem>Install Trident Protect</TextListItem>
@@ -399,13 +382,7 @@ export const SusanooProtectDeployProgress = () => {
                 </TextList>
               </TextContent>
             </WizardStep>
-            <WizardStep name="Activation" id="trident-protect-activation">
-              <TextContent>
-              <SusanooTridentProtectActivationDetails application={selectedResource.name} />
-                <Text component={TextVariants.h1}>Help</Text>
-                <Text component={TextVariants.p}>This steps enables the Early Access Program for Trident Protect with the provided key by NetApp.</Text>
-              </TextContent>
-            </WizardStep>
+
             <WizardStep name="Helm Charts" id="trident-protect-helm">
               <TextContent>
                 <SusanooTridentProtectHelmDetails application={selectedResource.name} />
@@ -414,7 +391,7 @@ export const SusanooProtectDeployProgress = () => {
               </TextContent>
             </WizardStep>
             <WizardStep name="CRDs" id="trident-protect-crds" >
-                <TextContent>
+              <TextContent>
                 <Text component={TextVariants.h1}>Help</Text>
                 <Text component={TextVariants.p}>This step requires a manual intervention to install the controller & CRDs for Trident Protect.</Text>
                 <Text component={TextVariants.p}>To install the CRDs, follow either the GUI:</Text>
@@ -472,12 +449,12 @@ export const SusanooProtectDeployProgress = () => {
 
 };
 
-const SusanooBackendSetup = () => {  
+const SusanooBackendSetup = () => {
 
   return (
     <>
-        <SusanooConsolePlugin />
-        <SusanooProtectDeployProgress />
+      <SusanooConsolePlugin />
+      <SusanooProtectDeployProgress />
     </>
   );
 };

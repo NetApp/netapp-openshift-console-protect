@@ -5,10 +5,9 @@ RUN command -v yarn || npm i -g yarn
 
 ADD . /usr/src/app
 WORKDIR /usr/src/app
-RUN mv NOTICE.txt ../
 RUN yarn install
 RUN yarn build
-RUN mv ../NOTICE.txt dist/
+RUN mv NOTICE/NOTICE.txt dist/
 
 FROM registry.access.redhat.com/ubi9/nginx-120:latest
 
